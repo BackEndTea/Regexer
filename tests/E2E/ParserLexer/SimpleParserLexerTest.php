@@ -88,5 +88,22 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 ''
             ),
         ];
+
+        yield 'With an escaped character' => [
+            '/ab\dcd/u',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('ab'),
+                Token\Escaped\EscapedCharacter::fromCharacter('d'),
+                Token\LiteralCharacters::create('cd'),
+                Token\Delimiter::create('/'),
+                Token\Modifier::fromModifiers('u'),
+            ],
+            new Node\RootNode('/', [
+                new Node\LiteralCharacters('ab'),
+                new Node\Escaped('d'),
+                new Node\LiteralCharacters('cd'),
+            ], 'u'),
+        ];
     }
 }

@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace BackEndTea\Regexer\Token\Exception;
 
-use BackEndTea\Regexer\RegexerException;
-use InvalidArgumentException;
-
 use function sprintf;
 
-final class MissingStart extends InvalidArgumentException implements RegexerException
+final class MissingStart extends SyntaxException
 {
     public static function fromEnding(string $char): self
     {

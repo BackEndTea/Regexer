@@ -13,6 +13,7 @@ use BackEndTea\Regexer\Token\Escaped;
 use BackEndTea\Regexer\Token\Exception\InvalidDelimiter;
 use BackEndTea\Regexer\Token\Exception\MissingEnd;
 use BackEndTea\Regexer\Token\Exception\MissingStart;
+use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
 use BackEndTea\Regexer\Token\LiteralCharacters;
 use BackEndTea\Regexer\Token\Modifier;
 use BackEndTea\Regexer\Token\Or_;
@@ -192,7 +193,7 @@ final class Lexer
         // Quick check, it may be escaped, but we don't know yet
         $potentialClosingIndex = $input->indexOfNext(']', $input->currentIndex());
         if ($potentialClosingIndex === null) {
-            throw MissingEnd::fromOpening('[');
+            throw UnclosedBracketList::create();
         }
 
         // skip the first [
@@ -281,7 +282,7 @@ final class Lexer
         } while ($input->next() !== null);
 
         if (! $result[array_key_last($result)] instanceof BracketList\End) {
-            throw MissingEnd::fromOpening('[');
+            throw UnclosedBracketList::create();
         }
 
         foreach ($result as $item) {
