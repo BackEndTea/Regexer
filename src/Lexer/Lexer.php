@@ -22,6 +22,7 @@ use BackEndTea\Regexer\Token\SubPattern;
 
 use function array_key_last;
 use function array_pop;
+use function assert;
 use function is_iterable;
 use function preg_match;
 use function strlen;
@@ -141,8 +142,9 @@ final class Lexer
             }
 
             if (is_iterable($token)) {
-                /** @var Token $item */
                 foreach ($token as $item) {
+                    assert($item instanceof Token);
+
                     yield $item;
                 }
 
@@ -254,9 +256,10 @@ final class Lexer
                         $result[]   = BracketList\OneOf::create($characters);
                         $characters = '';
                     }
+
                     $next = $input->next();
 
-                    if($next === null) {
+                    if ($next === null) {
                         throw MissingEnd::fromDelimiter($this->delimiter ?? '');
                     }
 

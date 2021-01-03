@@ -48,7 +48,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('bar'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'plus' => [
@@ -62,7 +62,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'questionmark' => [
@@ -76,7 +76,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'hat' => [
@@ -87,7 +87,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('foobar'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'dollar' => [
@@ -98,7 +98,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\Position\End::create(),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'star' => [
@@ -112,7 +112,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
 
         yield 'escaped star' => [
@@ -126,7 +126,7 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], '')
+            new Node\RootNode('/', [], ''),
         ];
     }
 }

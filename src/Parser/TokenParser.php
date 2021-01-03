@@ -10,8 +10,8 @@ use BackEndTea\Regexer\NotImplemented;
 use BackEndTea\Regexer\StringStream;
 use BackEndTea\Regexer\Token;
 use BackEndTea\Regexer\Util\Util;
-
 use LogicException;
+
 use function array_pop;
 use function assert;
 use function count;
@@ -85,11 +85,12 @@ final class TokenParser implements Parser
             }
 
             if ($token instanceof Token\Quantifier\QuantifierToken) {
-                $children   = $root->getChildren();
-                $last       = array_pop($children);
+                $children = $root->getChildren();
+                $last     = array_pop($children);
                 if ($last === null) {
                     throw new LogicException('should not happen');
                 }
+
                 $children[] = Node\Quantified::fromToken($last, $token);
                 $root->setChildren($children);
                 continue;
@@ -223,11 +224,12 @@ final class TokenParser implements Parser
             }
 
             if ($token instanceof Token\Quantifier\QuantifierToken) {
-                $children   = $pattern->getChildren();
-                $last       = array_pop($children);
+                $children = $pattern->getChildren();
+                $last     = array_pop($children);
                 if ($last === null) {
                     throw new LogicException('should not happen');
                 }
+
                 $children[] = Node\Quantified::fromToken($last, $token);
                 $pattern->setChildren($children);
                 continue;

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace BackEndTea\Regexer\Util;
 
-use Iterator;
-
 use Traversable;
+
 use function iterator_to_array;
 
 /**
