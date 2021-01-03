@@ -37,7 +37,7 @@ final class LexerFailureTest extends TestCase
         yield ['/a[\]'];
     }
 
-    public function testCantHaveDelimiterInsideOfGroup(): void
+    public function testCantHaveDelimiterInsideOfBracketList(): void
     {
         $lexer = new Lexer();
 

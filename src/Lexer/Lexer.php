@@ -108,7 +108,7 @@ final class Lexer
                         $token = SubPattern\End::create();
                         break;
                     case '[':
-                        $token = $this->tokensForGroup($input);
+                        $token = $this->tokensForBracketList($input);
 
                         break;
                     case '{':
@@ -185,7 +185,7 @@ final class Lexer
     /**
      * @return iterable<Token>
      */
-    private function tokensForGroup(Stream $input): iterable
+    private function tokensForBracketList(Stream $input): iterable
     {
         // Quick check, it may be escaped, but we don't know yet
         $potentialClosingIndex = $input->indexOfNext(']', $input->currentIndex());
@@ -267,7 +267,7 @@ final class Lexer
                     break;
                 default:
                     if ($current === $this->delimiter) {
-                        throw InvalidDelimiter::insideOfGroupAtPosition($input->currentIndex());
+                        throw InvalidDelimiter::insideOfBracketListAtPosition($input->currentIndex());
                     }
 
                     $first       = false;

@@ -19,10 +19,10 @@ final class InvalidDelimiter extends InvalidArgumentException implements Regexer
         ));
     }
 
-    public static function insideOfGroupAtPosition(int $position): self
+    public static function insideOfBracketListAtPosition(int $position): self
     {
         return new self(sprintf(
-            'Unescaped delimiter inside of a group, at postion %d is not allowed',
+            'Unescaped delimiter inside of a bracketlist, at postion %d is not allowed',
             $position
         ));
     }
