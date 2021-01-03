@@ -1,5 +1,6 @@
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - phpstan_baseline.neon
 
 parameters:
     inferPrivatePropertyTypeFromConstructor: true

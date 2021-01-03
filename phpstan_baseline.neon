@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$token of static method BackEndTea\\\\Regexer\\\\Token\\\\Delimiter\\:\\:create\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Lexer/Lexer.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Lexer/Lexer.php
+

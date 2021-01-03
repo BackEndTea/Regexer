@@ -118,7 +118,9 @@ final class Lexer
                         $token = Or_::create();
                         break;
                     case '\\':
-                        $token = Escaped\EscapedCharacter::fromCharacter($input->next());
+                        $next = $input->next();
+                        assert($next !== null);
+                        $token = Escaped\EscapedCharacter::fromCharacter($next);
                         break;
                     case $this->delimiter:
                         $this->hadEnded = true;
@@ -231,8 +233,11 @@ final class Lexer
                     }
 
                     $next = $input->next();
+                    assert($next !== null);
                     if ($next === '\\') {
-                        $next .= $input->next();
+                        $after = $input->next();
+                        assert($after !== null);
+                        $next .= $after;
                     }
 
                     if (strlen($characters) > 1) {
