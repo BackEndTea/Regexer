@@ -64,28 +64,6 @@ final class QuantifierToken extends Token
             return new self($characters);
         }
 
-//        $items = array_map(
-//            static function (string $number) use($characters): string {
-//                $number = $number === ''
-//                    ? '-1'
-//                    : $number;
-//                if (! $number === '' || ! is_numeric($number) || ((string) (int) $number) !== $number) {
-//                    var_dump($number);
-//                    throw InvalidQuantifier::fromCharacters($characters);
-//                }
-//                return $number;
-//            },
-//            explode(',', $pattern)
-//        );
-//
-//        if (count($items) === 1) {
-//            return new self($characters, (int) $items[0]);
-//        }
-//
-//        if (count($items) === 2) {
-//            return new self($characters, (int) $items[0], (int) $items[1]);
-//        }
-
         throw InvalidQuantifier::fromCharacters($characters);
     }
 

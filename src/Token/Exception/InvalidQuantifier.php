@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace BackEndTea\Regexer\Token\Exception;
 
-use BackEndTea\Regexer\RegexerException;
-use InvalidArgumentException;
-
 use function sprintf;
 
-final class InvalidQuantifier extends InvalidArgumentException implements RegexerException
+final class InvalidQuantifier extends SyntaxException
 {
     public static function fromCharacters(string $characters): self
     {

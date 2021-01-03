@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace BackEndTea\Regexer\Token\Exception;
 
-use BackEndTea\Regexer\RegexerException;
-use InvalidArgumentException;
-
 use function sprintf;
 
-final class InvalidDelimiter extends InvalidArgumentException implements RegexerException
+final class InvalidDelimiter extends SyntaxException
 {
     public static function fromDelimiter(string $delimiter): self
     {

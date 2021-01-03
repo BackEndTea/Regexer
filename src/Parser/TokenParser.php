@@ -54,53 +54,16 @@ final class TokenParser implements Parser
         for ($i = 1; $i < $max; $i++) {
             $token = $tokens[$i];
 
-            if ($token instanceof Token\BracketList\Start) {
-                $i = $this->parseBracketList($root, $tokens, $i + 1);
-                continue;
-            }
-
-            if ($token instanceof Token\SubPattern\Start) {
-                $i = $this->parseSubPattern($root, $tokens, $i + 1);
-                continue;
-            }
-
-            if ($token instanceof Token\Or_) {
-                $i = $this->handleOr($root, $tokens, $i);
-                continue;
-            }
-
-            if ($token instanceof Token\LiteralCharacters) {
-                $root->addChild(new Node\LiteralCharacters($token->asString()));
-                continue;
-            }
-
-            if ($token instanceof Token\Escaped\EscapedCharacter) {
-                $root->addChild(new Node\Escaped(substr($token->asString(), -1)));
-                continue;
-            }
-
             if ($token instanceof Token\Modifier) {
                 $root->setModifiers($token->asString());
-                continue;
-            }
-
-            if ($token instanceof Token\Quantifier\QuantifierToken) {
-                $children = $root->getChildren();
-                $last     = array_pop($children);
-                if ($last === null) {
-                    throw new LogicException('should not happen');
-                }
-
-                $children[] = Node\Quantified::fromToken($last, $token);
-                $root->setChildren($children);
-                continue;
+                break;
             }
 
             if ($token instanceof Token\Delimiter) {
                 continue;
             }
 
-            throw NotImplemented::fromToken($token);
+            [$i] = $this->parseFromToken($root, $tokens, $i);
         }
 
         return $root;
@@ -110,8 +73,10 @@ final class TokenParser implements Parser
      * A bracket list can only contain 'simple' children.
      *
      * @param array<Token> $tokens
+     *
+     * @return array{int, Node}
      */
-    private function parseBracketList(Node\NodeWithChildren $root, array $tokens, int $currentIndex): int
+    private function parseBracketList(array $tokens, int $currentIndex): array
     {
         $negated = false;
         $parts   = [];
@@ -145,19 +110,7 @@ final class TokenParser implements Parser
             throw NotImplemented::fromToken($token);
         }
 
-        $result = new Node\BracketList(
-            $negated,
-            $parts
-        );
-        if ($root instanceof Node\Or_) {
-            $root->setRight($result);
-
-            return $i;
-        }
-
-        $root->addChild($result);
-
-        return $i;
+        return [$i, new Node\BracketList($negated, $parts)];
     }
 
     /**
@@ -185,8 +138,10 @@ final class TokenParser implements Parser
 
     /**
      * @param Token[] $tokens
+     *
+     * @return array{int, Node}
      */
-    private function parseSubPattern(Node\NodeWithChildren $root, array $tokens, int $currentIndex): int
+    private function parseSubPattern(array $tokens, int $currentIndex): array
     {
         $end     = count($tokens);
         $pattern = new Node\SubPattern([]);
@@ -198,99 +153,81 @@ final class TokenParser implements Parser
                 break;
             }
 
-            if ($token instanceof Token\SubPattern\Start) {
-                $i = $this->parseSubPattern($pattern, $tokens, $i + 1);
-                continue;
-            }
-
-            if ($token instanceof Token\BracketList\Start) {
-                $i = $this->parseBracketList($pattern, $tokens, $i + 1);
-                continue;
-            }
-
-            if ($token instanceof Token\Or_) {
-                $i = $this->handleOr($pattern, $tokens, $i);
-                continue;
-            }
-
-            if ($token instanceof Token\LiteralCharacters) {
-                $pattern->addChild(new Node\LiteralCharacters($token->asString()));
-                continue;
-            }
-
-            if ($token instanceof Token\Escaped\EscapedCharacter) {
-                $pattern->addChild(new Node\Escaped(substr($token->asString(), -1)));
-                continue;
-            }
-
-            if ($token instanceof Token\Quantifier\QuantifierToken) {
-                $children = $pattern->getChildren();
-                $last     = array_pop($children);
-                if ($last === null) {
-                    throw new LogicException('should not happen');
-                }
-
-                $children[] = Node\Quantified::fromToken($last, $token);
-                $pattern->setChildren($children);
-                continue;
-            }
-
-            throw NotImplemented::fromToken($token);
+            [$i] = $this->parseFromToken($pattern, $tokens, $i);
         }
 
-        if ($root instanceof Node\Or_) {
-            $root->setRight($pattern);
-
-            return $i;
-        }
-
-        $root->addChild($pattern);
-
-        return $i;
+        return [$i, $pattern];
     }
 
     /**
-     * @param Token[] $tokens
+     * @param array<Token> $tokens
+     *
+     * @return array{int, Node}
      */
-    private function parseOr(Node\NodeWithChildren $root, Node $left, array &$tokens, int $currentIndex): int
+    private function parseFromToken(Node\NodeWithChildren $parent, array $tokens, int $i): array
     {
-        $or = new Node\Or_($left, new Node\NoopNode());
-        $root->addChild($or);
-        $currentIndex++;
-
-        $token = $tokens[$currentIndex];
+        $node  = null;
+        $token = $tokens[$i];
 
         if ($token instanceof Token\BracketList\Start) {
-            return $this->parseBracketList($or, $tokens, $currentIndex + 1);
+            [$i, $node] = $this->parseBracketList($tokens, $i + 1);
         }
 
         if ($token instanceof Token\SubPattern\Start) {
-            return $this->parseSubPattern($or, $tokens, $currentIndex + 1);
+            [$i, $node] = $this->parseSubPattern($tokens, $i + 1);
+        }
+
+        if ($token instanceof Token\Or_) {
+            $children = $parent->getChildren();
+            $last     = array_pop($children);
+            if ($last === null) {
+                throw new LogicException('should not happen');
+            }
+
+            $parent->setChildren($children);
+            $or = new Node\Or_($last, new Node\NoopNode());
+            if ($parent instanceof Node\Or_) {
+                $parent->setRight($or);
+            } else {
+                $parent->addChild($or);
+            }
+
+            [$i, $node] = $this->parseFromToken($or, $tokens, ++$i);
+
+            $or->setRight($node);
+
+            return [$i, $node];
         }
 
         if ($token instanceof Token\LiteralCharacters) {
-            $or->setRight(new Node\LiteralCharacters($token->asString()));
+            $node = new Node\LiteralCharacters($token->asString());
+        }
 
-            return $currentIndex;
+        if ($token instanceof Token\Escaped\EscapedCharacter) {
+            $node = new Node\Escaped(substr($token->asString(), -1));
+        }
+
+        if ($token instanceof Token\Quantifier\QuantifierToken) {
+            $children = $parent->getChildren();
+            $last     = array_pop($children);
+            if ($last === null) {
+                throw new LogicException('should not happen');
+            }
+
+            $parent->setChildren($children);
+            $node = Node\Quantified::fromToken($last, $token);
+        }
+
+        if ($node instanceof Node) {
+            if ($parent instanceof Node\Or_) {
+                $parent->setRight($node);
+            } else {
+                $parent->addChild($node);
+            }
+
+            return [$i, $node];
         }
 
         throw NotImplemented::fromToken($token);
-    }
-
-    /**
-     * @param Token[] $tokens
-     */
-    private function handleOr(Node\NodeWithChildren $parent, array &$tokens, int $i): int
-    {
-        $currentChildren = $parent->getChildren();
-        $last            = array_pop($currentChildren);
-
-        if ($last === null) {
-            throw new LogicException('should not happen');
-        }
-
-        $parent->setChildren($currentChildren);
-
-        return $this->parseOr($parent, $last, $tokens, $i);
     }
 }
