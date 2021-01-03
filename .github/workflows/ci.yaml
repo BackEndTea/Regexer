@@ -105,7 +105,6 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - "7.4"
                     - "8.0"
 
         steps:
@@ -123,4 +122,4 @@ jobs:
                 run: "composer update --no-interaction --no-progress"
 
             -   name: "Run unit tests"
-                run: "vendor/bin/infection --threads=4"
+                run: "vendor/bin/infection --threads=4 --logger-github"
