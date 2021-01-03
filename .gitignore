@@ -1,0 +1,6 @@
+/vendor/
+coverage/
+.idea/
+/*.cache
+infection.log
+composer.lock
