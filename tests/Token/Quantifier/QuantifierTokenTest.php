@@ -15,6 +15,12 @@ final class QuantifierTokenTest extends TestCase
         QuantifierToken::fromBracketNotation('foo');
     }
 
+    public function testCantCreateQuantifierWithoutBrackets(): void
+    {
+        $this->expectException(InvalidQuantifier::class);
+        QuantifierToken::fromBracketNotation('2,3');
+    }
+
     public function testCantCreateFromNonNumericQuantifier(): void
     {
         $this->expectException(InvalidQuantifier::class);

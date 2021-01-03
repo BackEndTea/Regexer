@@ -16,5 +16,8 @@
     <!-- Include full Doctrine Coding Standard -->
     <rule ref="Doctrine">
         <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+
+        <!--This forces some weird continue statments.-->
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed" />
     </rule>
 </ruleset>
