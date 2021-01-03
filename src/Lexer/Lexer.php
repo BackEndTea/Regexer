@@ -146,8 +146,6 @@ final class Lexer
 
             if (is_iterable($token)) {
                 foreach ($token as $item) {
-                    assert($item instanceof Token);
-
                     yield $item;
                 }
 
@@ -217,20 +215,20 @@ final class Lexer
                     break;
                 case '-':
                     if ($first) {
-                        $first       = false;
-                        $characters .= $current;
+                        $first      = false;
+                        $characters = $current;
                         break;
                     }
 
                     $last = $result[array_key_last($result)];
-                    if (
-                        $characters === ''
-                        && $last instanceof Escaped\EscapedCharacter
-                    ) {
+                    if ($characters !== '') {
+                        $one = substr($characters, -1);
+                    } elseif ($last instanceof Escaped\EscapedCharacter) {
                         array_pop($result);
                         $one = $last->asString();
                     } else {
-                        $one = substr($characters, -1);
+                        $characters = $current;
+                        break;
                     }
 
                     $next = $input->next();

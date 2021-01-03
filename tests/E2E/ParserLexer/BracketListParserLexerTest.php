@@ -349,5 +349,24 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                 ''
             ),
         ];
+
+        yield 'BracketList with a - after a range' => [
+            '/[a-z-b]/',
+            [
+                Token\Delimiter::create('/'),
+                Token\BracketList\Start::create(),
+                Token\BracketList\Range::fromCharacters('a-z'),
+                Token\BracketList\OneOf::create('-b'),
+
+                Token\BracketList\End::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\BracketList(false, [
+                    new Node\BracketList\Range('a', 'z'),
+                    new Node\BracketList\OneOf('-b'),
+                ]),
+            ], ''),
+        ];
     }
 }
