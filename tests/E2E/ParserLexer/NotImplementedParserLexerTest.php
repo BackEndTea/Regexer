@@ -38,19 +38,6 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
 
     public function provideTestCases(): Generator
     {
-        yield 'dot' => [
-            '/fo.|bar/',
-            [
-                Token\Delimiter::create('/'),
-                Token\LiteralCharacters::create('fo'),
-                Token\Dot::create(),
-                Token\Or_::create(),
-                Token\LiteralCharacters::create('bar'),
-                Token\Delimiter::create('/'),
-            ],
-            new Node\RootNode('/', [], ''),
-        ];
-
         yield 'plus' => [
             '/fo|b+r/',
             [
@@ -62,7 +49,20 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [], ''),
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '+',
+                            1,
+                            null
+                        ),
+                        new Node\LiteralCharacters('r'),
+                    ])
+                ),
+            ], ''),
         ];
 
         yield 'questionmark' => [

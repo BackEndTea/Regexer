@@ -105,5 +105,26 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 new Node\LiteralCharacters('cd'),
             ], 'u'),
         ];
+
+        yield 'dot' => [
+            '/fo.|bar/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Dot::create(),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\NodeGroup([
+                        new Node\LiteralCharacters('fo'),
+                        new Node\Dot(),
+                    ]),
+                    new Node\LiteralCharacters('bar')
+                ),
+            ], ''),
+        ];
     }
 }

@@ -179,18 +179,13 @@ final class TokenParser implements Parser
 
         if ($token instanceof Token\Or_) {
             $children = $parent->getChildren();
-            $last     = array_pop($children);
-            if ($last === null) {
-                throw new LogicException('should not happen');
-            }
+            $child    = count($children) === 1
+                ? $children[0]
+                : new Node\NodeGroup($children);
 
-            $parent->setChildren($children);
-            $or = new Node\Or_($last, new Node\NoopNode());
-            if ($parent instanceof Node\Or_) {
-                $parent->setRight($or);
-            } else {
-                $parent->addChild($or);
-            }
+            $or = new Node\Or_($child, new Node\NoopNode());
+
+            $parent->setChildren([$or]);
 
             [$i, $node] = $this->parseFromToken($or, $tokens, ++$i);
 
@@ -216,6 +211,10 @@ final class TokenParser implements Parser
 
             $parent->setChildren($children);
             $node = Node\Quantified::fromToken($last, $token);
+        }
+
+        if ($token instanceof Token\Dot) {
+            $node = new Node\Dot();
         }
 
         if ($node instanceof Node) {

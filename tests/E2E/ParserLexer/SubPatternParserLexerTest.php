@@ -67,9 +67,11 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\Or_(
                         new Node\SubPattern([
-                            new Node\LiteralCharacters('f'),
                             new Node\Or_(
-                                new Node\SubPattern([new Node\LiteralCharacters('oo')]),
+                                new Node\NodeGroup([
+                                    new Node\LiteralCharacters('f'),
+                                    new Node\SubPattern([new Node\LiteralCharacters('oo')]),
+                                ]),
                                 new Node\SubPattern([new Node\LiteralCharacters('aa')])
                             ),
                         ]),
