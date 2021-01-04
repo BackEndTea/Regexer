@@ -24,4 +24,5 @@ $ast = (new TokenParser(new Lexer()))->parse('/((foo)|(bar)){2,4}/');
 
 $newAst = (new Traverser([new RemoveQuantifierVisitor()]))->traverse($ast);
 
-echo $newAst->asString(); // "/((foo)|(bar))/"
+echo $newAst->asString();
+$output = '/((foo)|(bar))/';
