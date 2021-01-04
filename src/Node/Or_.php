@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
-use InvalidArgumentException;
 use LogicException;
 
 use function array_values;
@@ -67,7 +66,13 @@ final class Or_ extends NodeWithChildren
 
     public function addChild(Node $node): void
     {
-        throw new InvalidArgumentException('Cant add a child to an or, replace them instead');
+        if (! $this->right instanceof Node\NodeGroup) {
+            $this->right = $this->right instanceof Node\NoopNode
+                ? new Node\NodeGroup([])
+                : new Node\NodeGroup([$this->right]);
+        }
+
+        $this->right->addChild($node);
     }
 
     public function asString(): string

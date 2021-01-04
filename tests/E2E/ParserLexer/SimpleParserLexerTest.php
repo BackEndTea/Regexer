@@ -78,11 +78,11 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 '/',
                 [
                     new Node\Or_(
+                        new Node\LiteralCharacters('abc'),
                         new Node\Or_(
-                            new Node\LiteralCharacters('abc'),
                             new Node\LiteralCharacters('bcd'),
+                            new Node\LiteralCharacters('cde'),
                         ),
-                        new Node\LiteralCharacters('cde'),
                     ),
                 ],
                 ''
