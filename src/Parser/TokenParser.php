@@ -63,6 +63,15 @@ final class TokenParser implements Parser
                 continue;
             }
 
+            $children = $root->getChildren();
+            if (isset($children[count($children) - 1])) {
+                $child = $children[count($children) - 1];
+                if ($child instanceof Node\Or_) {
+                    [$i] = $this->parseFromToken($child, $tokens, $i);
+                    continue;
+                }
+            }
+
             [$i] = $this->parseFromToken($root, $tokens, $i);
         }
 
@@ -153,6 +162,15 @@ final class TokenParser implements Parser
                 break;
             }
 
+            $children = $pattern->getChildren();
+            if (isset($children[count($children) - 1])) {
+                $child = $children[count($children) - 1];
+                if ($child instanceof Node\Or_) {
+                    [$i] = $this->parseFromToken($child, $tokens, $i);
+                    continue;
+                }
+            }
+
             [$i] = $this->parseFromToken($pattern, $tokens, $i);
         }
 
@@ -178,12 +196,24 @@ final class TokenParser implements Parser
         }
 
         if ($token instanceof Token\Or_) {
-            $children = $parent->getChildren();
-            $child    = count($children) === 1
-                ? $children[0]
-                : new Node\NodeGroup($children);
+            if ($parent instanceof Node\Or_) {
+                $child = $parent->getRight();
+                $or    = new Node\Or_($child, new Node\NoopNode());
+                $parent->setRight($or);
+                [$i, $node] = $this->parseFromToken($or, $tokens, ++$i);
 
-            $or = new Node\Or_($child, new Node\NoopNode());
+                $or->setRight($node);
+
+                return [$i, $or];
+            } else {
+                $children = $parent->getChildren();
+                $child    = count($children) === 1
+                    ? $children[0]
+                    : new Node\NodeGroup($children);
+                $or       = new Node\Or_($child, new Node\NoopNode());
+
+                $parent->setChildren([$or]);
+            }
 
             $parent->setChildren([$or]);
 
@@ -191,7 +221,7 @@ final class TokenParser implements Parser
 
             $or->setRight($node);
 
-            return [$i, $node];
+            return [$i, $or];
         }
 
         if ($token instanceof Token\LiteralCharacters) {
@@ -203,13 +233,34 @@ final class TokenParser implements Parser
         }
 
         if ($token instanceof Token\Quantifier\QuantifierToken) {
-            $children = $parent->getChildren();
-            $last     = array_pop($children);
-            if ($last === null) {
-                throw new LogicException('should not happen');
+            if ($parent instanceof Node\Or_) {
+                $last = $parent->getRight();
+                if ($last instanceof Node\NodeGroup) {
+                    $children  = $last->getChildren();
+                    $lastChild = array_pop($children);
+                    if ($lastChild === null) {
+                        throw new LogicException('should not happen');
+                    }
+
+                    $children[] = $node = Node\Quantified::fromToken($lastChild, $token);
+                    $last->setChildren($children);
+
+                    return [$i, $node];
+                }
+
+                $parent->setRight($node = Node\Quantified::fromToken($last, $token));
+
+                return [$i, $node];
+            } else {
+                $children = $parent->getChildren();
+                $last     = array_pop($children);
+                if ($last === null) {
+                    throw new LogicException('should not happen');
+                }
+
+                $parent->setChildren($children);
             }
 
-            $parent->setChildren($children);
             $node = Node\Quantified::fromToken($last, $token);
         }
 
@@ -218,11 +269,7 @@ final class TokenParser implements Parser
         }
 
         if ($node instanceof Node) {
-            if ($parent instanceof Node\Or_) {
-                $parent->setRight($node);
-            } else {
-                $parent->addChild($node);
-            }
+            $parent->addChild($node);
 
             return [$i, $node];
         }
