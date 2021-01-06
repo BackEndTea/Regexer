@@ -38,20 +38,6 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
 
     public function provideTestCases(): Generator
     {
-        yield 'questionmark' => [
-            '/fo|b?r/',
-            [
-                Token\Delimiter::create('/'),
-                Token\LiteralCharacters::create('fo'),
-                Token\Or_::create(),
-                Token\LiteralCharacters::create('b'),
-                Token\Quantifier\QuantifierToken::questionMark(),
-                Token\LiteralCharacters::create('r'),
-                Token\Delimiter::create('/'),
-            ],
-            new Node\RootNode('/', [], ''),
-        ];
-
         yield 'hat' => [
             '/^foobar/',
             [
@@ -69,34 +55,6 @@ final class NotImplementedParserLexerTest extends ParserLexerTestCase
                 Token\Delimiter::create('/'),
                 Token\LiteralCharacters::create('foobar'),
                 Token\Position\End::create(),
-                Token\Delimiter::create('/'),
-            ],
-            new Node\RootNode('/', [], ''),
-        ];
-
-        yield 'star' => [
-            '/fo|b*r/',
-            [
-                Token\Delimiter::create('/'),
-                Token\LiteralCharacters::create('fo'),
-                Token\Or_::create(),
-                Token\LiteralCharacters::create('b'),
-                Token\Quantifier\QuantifierToken::star(),
-                Token\LiteralCharacters::create('r'),
-                Token\Delimiter::create('/'),
-            ],
-            new Node\RootNode('/', [], ''),
-        ];
-
-        yield 'escaped star' => [
-            '/fo|b\*r/',
-            [
-                Token\Delimiter::create('/'),
-                Token\LiteralCharacters::create('fo'),
-                Token\Or_::create(),
-                Token\LiteralCharacters::create('b'),
-                Token\Escaped\EscapedCharacter::fromCharacter('*'),
-                Token\LiteralCharacters::create('r'),
                 Token\Delimiter::create('/'),
             ],
             new Node\RootNode('/', [], ''),

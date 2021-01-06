@@ -85,12 +85,15 @@ final class OrParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('/', [
                 new Node\Or_(
                     new Node\LiteralCharacters('foo'),
-                    new Node\Quantified(
-                        new Node\LiteralCharacters('bar'),
-                        '{2,}',
-                        2,
-                        null
-                    )
+                    new Node\NodeGroup([
+                        new Node\LiteralCharacters('ba'),
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('r'),
+                            '{2,}',
+                            2,
+                            null
+                        ),
+                    ])
                 ),
             ], 'i'),
         ];
@@ -261,6 +264,110 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     ]),
                 ),
             ], 'iu'),
+        ];
+
+        yield 'questionmark' => [
+            '/fo|b?r/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('b'),
+                Token\Quantifier\QuantifierToken::questionMark(),
+                Token\LiteralCharacters::create('r'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '?',
+                            0,
+                            1
+                        ),
+                        new Node\LiteralCharacters('r'),
+                    ])
+                )
+            ], ''),
+        ];
+
+        yield 'star' => [
+            '/fo|b*r/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('b'),
+                Token\Quantifier\QuantifierToken::star(),
+                Token\LiteralCharacters::create('r'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '*',
+                            0,
+                            null
+                        ),
+                        new Node\LiteralCharacters('r'),
+                    ])
+                )
+            ], ''),
+        ];
+
+        yield 'escaped star' => [
+            '/fo|b\*r/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('b'),
+                Token\Escaped\EscapedCharacter::fromCharacter('*'),
+                Token\LiteralCharacters::create('r'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\LiteralCharacters('b'),
+                        new Node\Escaped('*'),
+                        new Node\LiteralCharacters('r')
+                    ])
+                )
+            ], ''),
+        ];
+
+        yield 'Quantify first on right side of or, not a literal character' => [
+            '/foo|\d?ab/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\Escaped\EscapedCharacter::fromCharacter('d'),
+                Token\Quantifier\QuantifierToken::questionMark(),
+                Token\LiteralCharacters::create('ab'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('foo'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\Escaped('d'),
+                            '?',
+                            0,
+                            1
+                        ),
+                        new Node\LiteralCharacters('ab')
+                    ])
+                )
+            ],'')
         ];
     }
 }
