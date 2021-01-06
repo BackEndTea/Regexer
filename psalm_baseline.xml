@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.3.2@57b53ff26237074fdf5cbcb034f7da5172be4524">
   <file src="src/Lexer/Lexer.php">
-    <MixedAssignment occurrences="1">
-      <code>$item</code>
-    </MixedAssignment>
-    <MixedReturnTypeCoercion occurrences="1">
-      <code>iterable&lt;Token&gt;</code>
-    </MixedReturnTypeCoercion>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;delimiter</code>
+    </MixedArgument>
     <RedundantCondition occurrences="1">
       <code>$this-&gt;delimiter === null</code>
     </RedundantCondition>

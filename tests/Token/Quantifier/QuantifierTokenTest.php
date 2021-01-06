@@ -27,6 +27,18 @@ final class QuantifierTokenTest extends TestCase
         QuantifierToken::fromBracketNotation('{a,b}');
     }
 
+    public function testCantCreateFromNonNumericForSingle(): void
+    {
+        $this->expectException(InvalidQuantifier::class);
+        QuantifierToken::fromBracketNotation('{a}');
+    }
+
+    public function testCantCreateFromNonNumericForFirst(): void
+    {
+        $this->expectException(InvalidQuantifier::class);
+        QuantifierToken::fromBracketNotation('{a,2}');
+    }
+
     public function testCantCreateFromFloatQuantifier(): void
     {
         $this->expectException(InvalidQuantifier::class);
@@ -43,5 +55,17 @@ final class QuantifierTokenTest extends TestCase
     {
         $token = QuantifierToken::fromBracketNotation('{2,}');
         $this->assertSame('{2,}', $token->asString());
+    }
+
+    public function testMustBeClosed(): void
+    {
+        $this->expectException(InvalidQuantifier::class);
+        QuantifierToken::fromBracketNotation('{1,2');
+    }
+
+    public function testMustBeOpened(): void
+    {
+        $this->expectException(InvalidQuantifier::class);
+        QuantifierToken::fromBracketNotation('1,2}');
     }
 }

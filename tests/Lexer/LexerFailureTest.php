@@ -73,5 +73,7 @@ final class LexerFailureTest extends TestCase
     {
         yield ['/a[/'];
         yield ['/[foo\]'];
+        yield ['/foo[ab\]cd'];
+        yield ['/foo[ab\]cd\\'];
     }
 }
