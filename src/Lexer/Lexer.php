@@ -17,7 +17,6 @@ use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
 use BackEndTea\Regexer\Token\LiteralCharacters;
 use BackEndTea\Regexer\Token\Modifier;
 use BackEndTea\Regexer\Token\Or_;
-use BackEndTea\Regexer\Token\Position;
 use BackEndTea\Regexer\Token\Quantifier\QuantifierToken;
 use BackEndTea\Regexer\Token\SubPattern;
 
@@ -91,10 +90,10 @@ final class Lexer
                         $token = QuantifierToken::questionMark();
                         break;
                     case '^':
-                        $token = Position\Start::create();
+                        $token = Token\Anchor\Start::create();
                         break;
                     case '$':
-                        $token = Position\End::create();
+                        $token = Token\Anchor\End::create();
                         break;
                     case '(':
                         ++$this->subPatternCount;
