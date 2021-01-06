@@ -41,11 +41,9 @@ final class Traverser
             }
 
             $result = $visitor->leaveNode($node);
-            if ($result === null) {
-                continue;
+            if ($result !== null) {
+                $node = $result;
             }
-
-            $node = $result;
         }
 
         foreach ($this->visitors as $visitor) {

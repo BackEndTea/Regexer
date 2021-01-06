@@ -19,10 +19,7 @@ final class Range extends Token
             $max < 3
             || $max > 5
             || ($characters[0] !== '\\' && $characters[1] !== '-')
-            || ($characters[$max - 2] !== '-'
-                && $characters[$max - 3]
-                && $characters[$max - 2] !== '\\'
-                && $characters[$max - 2] !== '-'
+            || ($characters[$max - 2] !== '-' && $characters[$max - 2] !== '\\'
             )
         ) {
             throw new InvalidArgumentException('Range must be between two character');

@@ -134,14 +134,12 @@ final class Lexer
                         break;
                 }
 
-                if ($token !== null) {
-                    continue;
-                }
-
-                $literalChars .= $char;
-                $char          = $input->next();
-                if ($char === null) {
-                    continue 2;
+                if ($token === null) {
+                    $literalChars .= $char;
+                    $char          = $input->next();
+                    if ($char === null) {
+                        break;
+                    }
                 }
             } while ($token === null);
 
@@ -165,7 +163,7 @@ final class Lexer
         } while ($input->next() !== null);
 
         if (! $this->hadEnded) {
-            throw MissingEnd::fromDelimiter($this->delimiter ?? '');
+            throw MissingEnd::fromDelimiter($this->delimiter);
         }
     }
 
@@ -269,7 +267,7 @@ final class Lexer
                     $next = $input->next();
 
                     if ($next === null) {
-                        throw MissingEnd::fromDelimiter($this->delimiter ?? '');
+                        throw UnclosedBracketList::create();
                     }
 
                     $result[] = Escaped\EscapedCharacter::fromCharacter($next);

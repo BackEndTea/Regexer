@@ -28,6 +28,7 @@ final class RangeTest extends TestCase
         yield ['a'];
         yield ['ab-1'];
         yield ['q-f2'];
+        yield ['\b-22'];
     }
 
     /**
@@ -47,5 +48,6 @@ final class RangeTest extends TestCase
         yield ['\]-\-'];
         yield ['---'];
         yield ['--2'];
+        yield ['a-z'];
     }
 }
