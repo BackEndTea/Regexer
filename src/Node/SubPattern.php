@@ -13,17 +13,31 @@ final class SubPattern extends NodeWithChildren
 {
     use WithChildren;
 
+    private bool $isCapturing;
+
     /**
      * @param array<Node> $children
      */
-    public function __construct(array $children)
+    public function __construct(array $children, bool $isCapturing = true)
     {
-        $this->children = $children;
+        $this->children    = $children;
+        $this->isCapturing = $isCapturing;
+    }
+
+    public function isCapturing(): bool
+    {
+        return $this->isCapturing;
+    }
+
+    public function setCapturing(bool $isCapturing): void
+    {
+        $this->isCapturing = $isCapturing;
     }
 
     public function asString(): string
     {
         return '(' .
+            ($this->isCapturing ? '' : '?:') .
             implode(
                 '',
                 array_map(

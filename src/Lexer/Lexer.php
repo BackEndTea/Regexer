@@ -98,7 +98,13 @@ final class Lexer
                         break;
                     case '(':
                         ++$this->subPatternCount;
-                        $token = SubPattern\Start::create();
+                        $token        = SubPattern\Start::create();
+                        $currentIndex = $input->currentIndex();
+                        if ($input->getBetween($currentIndex + 1, $currentIndex + 2) === '?:') {
+                            $input->moveTo($currentIndex + 2);
+                            $token = [$token, SubPattern\NonCapturing::create()];
+                        }
+
                         break;
                     case ')':
                         if ($this->subPatternCount === 0) {

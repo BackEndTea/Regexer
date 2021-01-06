@@ -162,6 +162,11 @@ final class TokenParser implements Parser
                 break;
             }
 
+            if ($token instanceof Token\SubPattern\NonCapturing) {
+                $pattern->setCapturing(false);
+                continue;
+            }
+
             $children = $pattern->getChildren();
             if (isset($children[count($children) - 1])) {
                 $child = $children[count($children) - 1];
