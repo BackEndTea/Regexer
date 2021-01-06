@@ -81,5 +81,18 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 ''
             ),
         ];
+
+        yield 'non capturing' => [
+            '/(?:foo)/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\SubPattern\NonCapturing::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\SubPattern\End::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [new Node\SubPattern([new Node\LiteralCharacters('foo')], false)], ''),
+        ];
     }
 }
