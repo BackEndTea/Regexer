@@ -109,5 +109,111 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 ),
             ], ''),
         ];
+
+        yield 'Quantified of a character within other characters' => [
+            '/ab{2}cd/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('ab'),
+                Token\Quantifier\QuantifierToken::fromBracketNotation('{2}'),
+                Token\LiteralCharacters::create('cd'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\LiteralCharacters('a'),
+                new Node\Quantified(
+                    new Node\LiteralCharacters('b'),
+                    '{2}',
+                    2,
+                    2
+                ),
+                new Node\LiteralCharacters('cd'),
+            ], ''),
+        ];
+
+        yield 'Quantified of a character within other characters on right side of OR' => [
+            '/a|\dab{2}cd/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('a'),
+                Token\Or_::create(),
+                Token\Escaped\EscapedCharacter::fromCharacter('d'),
+                Token\LiteralCharacters::create('ab'),
+                Token\Quantifier\QuantifierToken::fromBracketNotation('{2}'),
+                Token\LiteralCharacters::create('cd'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('a'),
+                    new Node\NodeGroup([
+                        new Node\Escaped('d'),
+                        new Node\LiteralCharacters('a'),
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '{2}',
+                            2,
+                            2
+                        ),
+                        new Node\LiteralCharacters('cd'),
+                    ])
+                ),
+            ], ''),
+        ];
+
+        yield 'Quantified of a character within other characters on right side of OR as the first token' => [
+            '/a|ab{2}cd/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('a'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('ab'),
+                Token\Quantifier\QuantifierToken::fromBracketNotation('{2}'),
+                Token\LiteralCharacters::create('cd'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('a'),
+                    new Node\NodeGroup([
+                        new Node\LiteralCharacters('a'),
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '{2}',
+                            2,
+                            2
+                        ),
+                        new Node\LiteralCharacters('cd'),
+                    ])
+                ),
+            ], ''),
+        ];
+
+        yield 'Quantified of a character within other characters on right side of OR as the first character' => [
+            '/a|a{2}bcd/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('a'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('a'),
+                Token\Quantifier\QuantifierToken::fromBracketNotation('{2}'),
+                Token\LiteralCharacters::create('bcd'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('a'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('a'),
+                            '{2}',
+                            2,
+                            2
+                        ),
+                        new Node\LiteralCharacters('bcd'),
+                    ])
+                ),
+            ], ''),
+        ];
     }
 }
