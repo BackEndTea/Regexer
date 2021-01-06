@@ -262,11 +262,12 @@ final class TokenParser implements Parser
             return $this->quantifyWithChildren($last, $token, $i);
         }
 
-        if (!$last instanceof Node\LiteralCharacters) {
+        if (! $last instanceof Node\LiteralCharacters) {
             $parent->setRight($node = Node\Quantified::fromToken($last, $token));
 
             return [$i, $node];
         }
+
         $lastCharactes = $last->getCharacters();
         if (strlen($lastCharactes) <= 1) {
             $parent->setRight($node = Node\Quantified::fromToken($last, $token));
@@ -288,7 +289,7 @@ final class TokenParser implements Parser
     private function quantifyWithChildren(Node\NodeWithChildren $parent, Token\Quantifier\QuantifierToken $token, int $i): array
     {
         $children = $parent->getChildren();
-        $last = array_pop($children);
+        $last     = array_pop($children);
         if ($last === null) {
             throw new LogicException('should not happen');
         }

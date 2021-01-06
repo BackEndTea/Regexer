@@ -289,7 +289,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         ),
                         new Node\LiteralCharacters('r'),
                     ])
-                )
+                ),
             ], ''),
         ];
 
@@ -316,7 +316,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         ),
                         new Node\LiteralCharacters('r'),
                     ])
-                )
+                ),
             ], ''),
         ];
 
@@ -337,9 +337,9 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\LiteralCharacters('b'),
                         new Node\Escaped('*'),
-                        new Node\LiteralCharacters('r')
+                        new Node\LiteralCharacters('r'),
                     ])
-                )
+                ),
             ], ''),
         ];
 
@@ -364,10 +364,10 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             0,
                             1
                         ),
-                        new Node\LiteralCharacters('ab')
+                        new Node\LiteralCharacters('ab'),
                     ])
-                )
-            ],'')
+                ),
+            ], ''),
         ];
     }
 }
