@@ -126,5 +126,33 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 ),
             ], ''),
         ];
+
+        yield 'hat' => [
+            '/^foobar/',
+            [
+                Token\Delimiter::create('/'),
+                Token\Anchor\Start::create(),
+                Token\LiteralCharacters::create('foobar'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Anchor\Start(),
+                new Node\LiteralCharacters('foobar'),
+            ], ''),
+        ];
+
+        yield 'dollar' => [
+            '/foobar$/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('foobar'),
+                Token\Anchor\End::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\LiteralCharacters('foobar'),
+                new Node\Anchor\End(),
+            ], ''),
+        ];
     }
 }

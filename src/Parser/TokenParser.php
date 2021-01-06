@@ -193,6 +193,26 @@ final class TokenParser implements Parser
         $node  = null;
         $token = $tokens[$i];
 
+        if ($token instanceof Token\LiteralCharacters) {
+            $node = new Node\LiteralCharacters($token->asString());
+        }
+
+        if ($token instanceof Token\Escaped\EscapedCharacter) {
+            $node = new Node\Escaped(substr($token->asString(), -1));
+        }
+
+        if ($token instanceof Token\Dot) {
+            $node = new Node\Dot();
+        }
+
+        if ($token instanceof Token\Anchor\End) {
+            $node = new Node\Anchor\End();
+        }
+
+        if ($token instanceof Token\Anchor\Start) {
+            $node = new Node\Anchor\Start();
+        }
+
         if ($token instanceof Token\BracketList\Start) {
             [$i, $node] = $this->parseBracketList($tokens, $i + 1);
         }
@@ -228,20 +248,8 @@ final class TokenParser implements Parser
             return [$i, $or];
         }
 
-        if ($token instanceof Token\LiteralCharacters) {
-            $node = new Node\LiteralCharacters($token->asString());
-        }
-
-        if ($token instanceof Token\Escaped\EscapedCharacter) {
-            $node = new Node\Escaped(substr($token->asString(), -1));
-        }
-
         if ($token instanceof Token\Quantifier\QuantifierToken) {
             return $this->handleQuantifier($parent, $token, $i);
-        }
-
-        if ($token instanceof Token\Dot) {
-            $node = new Node\Dot();
         }
 
         if ($node instanceof Node) {
