@@ -6,12 +6,14 @@ namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
 use BackEndTea\Regexer\Token\Quantifier\QuantifierToken;
+use LogicException;
 
+use function array_key_first;
 use function count;
 use function explode;
 use function trim;
 
-final class Quantified extends Node
+final class Quantified extends NodeWithChildren
 {
     private Node $quantifiedNode;
     private string $characters;
@@ -97,5 +99,30 @@ final class Quantified extends Node
     public function asString(): string
     {
         return $this->quantifiedNode . $this->characters;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChildren(): array
+    {
+        return [$this->getQuantifiedNode()];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setChildren(array $children): void
+    {
+        if (count($children) !== 1) {
+            throw new LogicException('Can only quantify a single child');
+        }
+
+        $this->quantifiedNode = $children[array_key_first($children)];
+    }
+
+    public function addChild(Node $node): void
+    {
+        throw new LogicException('cant add child to quantified node');
     }
 }
