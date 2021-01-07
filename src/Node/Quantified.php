@@ -6,12 +6,11 @@ namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
 use BackEndTea\Regexer\Token\Quantifier\QuantifierToken;
+use BackEndTea\Regexer\Util\QuantifierValidator;
 use LogicException;
 
 use function array_key_first;
 use function count;
-use function explode;
-use function trim;
 
 final class Quantified extends NodeWithChildren
 {
@@ -19,41 +18,31 @@ final class Quantified extends NodeWithChildren
     private string $characters;
     private int $min;
     private ?int $max;
+    private bool $lazy;
 
-    public function __construct(Node $quantifiedNode, string $characters, int $min, ?int $max)
+    public function __construct(Node $quantifiedNode, string $characters, bool $lazy)
     {
+        [$min, $max]          = QuantifierValidator::getMinAndMaxFromCharacters($characters);
         $this->quantifiedNode = $quantifiedNode;
         $this->characters     = $characters;
         $this->min            = $min;
         $this->max            = $max;
+        $this->lazy           = $lazy;
+    }
+
+    public function isLazy(): bool
+    {
+        return $this->lazy;
+    }
+
+    public function setLazy(bool $lazy): void
+    {
+        $this->lazy = $lazy;
     }
 
     public static function fromToken(Node $quantifiedNode, QuantifierToken $token): self
     {
-        $asString = $token->asString();
-        switch ($asString) {
-            case '+':
-                return new self($quantifiedNode, '+', 1, null);
-
-            case '*':
-                return new self($quantifiedNode, '*', 0, null);
-
-            case '?':
-                return new self($quantifiedNode, '?', 0, 1);
-        }
-
-        $pattern = trim($asString, '{}');
-        $items   = explode(',', $pattern);
-
-        if (count($items) === 1) {
-            return new self($quantifiedNode, $asString, (int) $items[0], (int) $items[0]);
-        }
-
-        if ($items[1] === '') {
-            return new self($quantifiedNode, $asString, (int) $items[0], null);
-        }
-
-        return new self($quantifiedNode, $asString, (int) $items[0], (int) $items[1]);
+        return new self($quantifiedNode, $token->asString(), false);
     }
 
     public function getQuantifiedNode(): Node
@@ -98,7 +87,7 @@ final class Quantified extends NodeWithChildren
 
     public function asString(): string
     {
-        return $this->quantifiedNode . $this->characters;
+        return $this->quantifiedNode . $this->characters . ($this->lazy ? '?' : '');
     }
 
     /**

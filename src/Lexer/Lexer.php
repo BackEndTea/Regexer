@@ -77,17 +77,36 @@ final class Lexer
             do {
                 $token = null;
                 switch ($char) {
+                    case $this->delimiter:
+                        $this->hadEnded = true;
+                        $token          = Delimiter::create($char);
+                        break;
                     case '.':
                         $token = Dot::create();
                         break;
                     case '+':
                         $token = QuantifierToken::plus();
+                        if ($input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
                         break;
                     case '*':
                         $token = QuantifierToken::star();
+                        if ($input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
                         break;
                     case '?':
                         $token = QuantifierToken::questionMark();
+                        if ($input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
                         break;
                     case '^':
                         $token = Token\Anchor\Start::create();
@@ -99,7 +118,7 @@ final class Lexer
                         ++$this->subPatternCount;
                         $token        = SubPattern\Start::create();
                         $currentIndex = $input->currentIndex();
-                        if ($input->getBetween($currentIndex + 1, $currentIndex + 2) === '?:') {
+                        if ($this->delimiter !== '?' && $input->getBetween($currentIndex + 1, $currentIndex + 2) === '?:') {
                             $input->moveTo($currentIndex + 2);
                             $token = [$token, SubPattern\NonCapturing::create()];
                         }
@@ -119,6 +138,11 @@ final class Lexer
                         break;
                     case '{':
                         $token = $this->quantifierFromTokens($input, $input->currentIndex());
+                        if ($token && $input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
                         break;
                     case '|':
                         $token = Or_::create();
@@ -127,10 +151,6 @@ final class Lexer
                         $next = $input->next();
                         assert($next !== null);
                         $token = Escaped\EscapedCharacter::fromCharacter($next);
-                        break;
-                    case $this->delimiter:
-                        $this->hadEnded = true;
-                        $token          = Delimiter::create($char);
                         break;
                 }
 

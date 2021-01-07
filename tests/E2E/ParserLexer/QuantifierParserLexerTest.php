@@ -25,8 +25,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\Quantified(
                     new Node\LiteralCharacters('a'),
                     '{3,5}',
-                    3,
-                    5
+                    false
                 ),
             ], ''),
         ];
@@ -39,7 +38,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 Token\Quantifier\QuantifierToken::fromBracketNotation('{3}'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [new Node\Quantified(new Node\LiteralCharacters('a'), '{3}', 3, 3)], ''),
+            new Node\RootNode('/', [new Node\Quantified(new Node\LiteralCharacters('a'), '{3}', false)], ''),
         ];
 
         yield 'Escaped quantifier' => [
@@ -96,14 +95,14 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\Or_(
                     new Node\SubPattern([
                         new Node\LiteralCharacters('{'),
-                        new Node\Quantified(new Node\Escaped('d'), '+', 1, null),
+                        new Node\Quantified(new Node\Escaped('d'), '+', false),
                         new Node\LiteralCharacters('}'),
                     ]),
                     new Node\SubPattern([
                         new Node\LiteralCharacters('{'),
-                        new Node\Quantified(new Node\Escaped('d'), '+', 1, null),
+                        new Node\Quantified(new Node\Escaped('d'), '+', false),
                         new Node\LiteralCharacters(','),
-                        new Node\Quantified(new Node\Escaped('d'), '*', 0, null),
+                        new Node\Quantified(new Node\Escaped('d'), '*', false),
                         new Node\LiteralCharacters('}'),
                     ])
                 ),
@@ -124,8 +123,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\Quantified(
                     new Node\LiteralCharacters('b'),
                     '{2}',
-                    2,
-                    2
+                    false
                 ),
                 new Node\LiteralCharacters('cd'),
             ], ''),
@@ -152,8 +150,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
                             '{2}',
-                            2,
-                            2
+                            false
                         ),
                         new Node\LiteralCharacters('cd'),
                     ])
@@ -180,8 +177,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
                             '{2}',
-                            2,
-                            2
+                            false
                         ),
                         new Node\LiteralCharacters('cd'),
                     ])
@@ -207,11 +203,123 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\Quantified(
                             new Node\LiteralCharacters('a'),
                             '{2}',
-                            2,
-                            2
+                            false
                         ),
                         new Node\LiteralCharacters('bcd'),
                     ])
+                ),
+            ], ''),
+        ];
+
+        yield 'lazy' => [
+            '/foo??/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('foo'),
+                Token\Quantifier\QuantifierToken::questionMark(),
+                Token\Quantifier\Lazy::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\LiteralCharacters('fo'),
+                new Node\Quantified(
+                    new Node\LiteralCharacters('o'),
+                    '?',
+                    true
+                ),
+            ], ''),
+        ];
+
+        yield 'lazy quantifier inside of or' => [
+            '/fo|\d{2}?\D/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\Escaped\EscapedCharacter::fromCharacter('d'),
+                Token\Quantifier\QuantifierToken::fromBracketNotation('{2}'),
+                Token\Quantifier\Lazy::create(),
+                Token\Escaped\EscapedCharacter::fromCharacter('D'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\Quantified(
+                            new Node\Escaped('d'),
+                            '{2}',
+                            true
+                        ),
+                        new Node\Escaped('D'),
+                    ])
+                ),
+            ], ''),
+        ];
+
+        yield 'lazy quantifier inside of or for literal characters' => [
+            '/fo|ab*?/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('ab'),
+                Token\Quantifier\QuantifierToken::star(),
+                Token\Quantifier\Lazy::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\NodeGroup([
+                        new Node\LiteralCharacters('a'),
+                        new Node\Quantified(
+                            new Node\LiteralCharacters('b'),
+                            '*',
+                            true
+                        ),
+                    ])
+                ),
+            ], ''),
+        ];
+
+        yield 'lazy quantifier inside of or for single literal character' => [
+            '/fo|a*?/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('fo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('a'),
+                Token\Quantifier\QuantifierToken::star(),
+                Token\Quantifier\Lazy::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Or_(
+                    new Node\LiteralCharacters('fo'),
+                    new Node\Quantified(
+                        new Node\LiteralCharacters('a'),
+                        '*',
+                        true
+                    )
+                ),
+            ], ''),
+        ];
+
+        yield 'lazy quantifier  plus' => [
+            '/a+?/',
+            [
+                Token\Delimiter::create('/'),
+                Token\LiteralCharacters::create('a'),
+                Token\Quantifier\QuantifierToken::plus(),
+                Token\Quantifier\Lazy::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\Quantified(
+                    new Node\LiteralCharacters('a'),
+                    '+',
+                    true
                 ),
             ], ''),
         ];
