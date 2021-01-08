@@ -154,5 +154,97 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 new Node\Anchor\End(),
             ], ''),
         ];
+
+        yield 'Question mark as delimiter' => [
+            '?a+?',
+            [
+                Token\Delimiter::create('?'),
+                Token\LiteralCharacters::create('a'),
+                Token\Quantifier\QuantifierToken::plus(),
+                Token\Delimiter::create('?'),
+            ],
+            new Node\RootNode('?', [
+                new Node\Quantified(
+                    new Node\LiteralCharacters('a'),
+                    '+',
+                    false
+                ),
+            ], ''),
+        ];
+
+        yield 'Question mark as delimiter with brackets quantifier' => [
+            '?a{2}?',
+            [
+                Token\Delimiter::create('?'),
+                Token\LiteralCharacters::create('a'),
+                Token\Quantifier\QuantifierToken::fromCharacters('{2}'),
+                Token\Delimiter::create('?'),
+            ],
+            new Node\RootNode('?', [
+                new Node\Quantified(
+                    new Node\LiteralCharacters('a'),
+                    '{2}',
+                    false
+                ),
+            ], ''),
+        ];
+
+        yield 'regex for phpstan ignore' => [
+            '#^Parameter \\#1 \\$char of static method BackEndTea\\\\Regexer\\\\Token\\\\Exception\\\\MissingEnd\\:\\:fromDelimiter\\(\\) expects string, string\\|null given\\.$#',
+            [
+                Token\Delimiter::create('#'),
+                Token\Anchor\Start::create(),
+                Token\LiteralCharacters::create('Parameter '),
+                Token\Escaped\EscapedCharacter::fromCharacter('#'),
+                Token\LiteralCharacters::create('1 '),
+                Token\Escaped\EscapedCharacter::fromCharacter('$'),
+                Token\LiteralCharacters::create('char of static method BackEndTea'),
+                Token\Escaped\EscapedCharacter::fromCharacter('\\'),
+                Token\LiteralCharacters::create('Regexer'),
+                Token\Escaped\EscapedCharacter::fromCharacter('\\'),
+                Token\LiteralCharacters::create('Token'),
+                Token\Escaped\EscapedCharacter::fromCharacter('\\'),
+                Token\LiteralCharacters::create('Exception'),
+                Token\Escaped\EscapedCharacter::fromCharacter('\\'),
+                Token\LiteralCharacters::create('MissingEnd'),
+                Token\Escaped\EscapedCharacter::fromCharacter(':'),
+                Token\Escaped\EscapedCharacter::fromCharacter(':'),
+                Token\LiteralCharacters::create('fromDelimiter'),
+                Token\Escaped\EscapedCharacter::fromCharacter('('),
+                Token\Escaped\EscapedCharacter::fromCharacter(')'),
+                Token\LiteralCharacters::create(' expects string, string'),
+                Token\Escaped\EscapedCharacter::fromCharacter('|'),
+                Token\LiteralCharacters::create('null given'),
+                Token\Escaped\EscapedCharacter::fromCharacter('.'),
+                Token\Anchor\End::create(),
+                Token\Delimiter::create('#'),
+            ],
+            new Node\RootNode('#', [
+                new Node\Anchor\Start(),
+                new Node\LiteralCharacters('Parameter '),
+                new Node\Escaped('#'),
+                new Node\LiteralCharacters('1 '),
+                new Node\Escaped('$'),
+                new Node\LiteralCharacters('char of static method BackEndTea'),
+                new Node\Escaped('\\'),
+                new Node\LiteralCharacters('Regexer'),
+                new Node\Escaped('\\'),
+                new Node\LiteralCharacters('Token'),
+                new Node\Escaped('\\'),
+                new Node\LiteralCharacters('Exception'),
+                new Node\Escaped('\\'),
+                new Node\LiteralCharacters('MissingEnd'),
+                new Node\Escaped(':'),
+                new Node\Escaped(':'),
+                new Node\LiteralCharacters('fromDelimiter'),
+                new Node\Escaped('('),
+                new Node\Escaped(')'),
+                new Node\LiteralCharacters(' expects string, string'),
+                new Node\Escaped('|'),
+                new Node\LiteralCharacters('null given'),
+                new Node\Escaped('.'),
+                new Node\Anchor\End(),
+            ], ''),
+        ];
     }
 }
