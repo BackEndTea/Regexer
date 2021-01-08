@@ -81,32 +81,26 @@ final class Lexer
                         $this->hadEnded = true;
                         $token          = Delimiter::create($char);
                         break;
+                    case '+':
+                    case '*':
+                    case '?':
+                        $token = QuantifierToken::fromCharacters($char);
+                        if ($this->delimiter !== '?' && $input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
+                        break;
+                    case '{':
+                        $token = $this->quantifierFromTokens($input, $input->currentIndex());
+                        if ($token && $this->delimiter !== '?' && $input->at($input->currentIndex() + 1) === '?') {
+                            $token = [$token, Token\Quantifier\Lazy::create()];
+                            $input->next();
+                        }
+
+                        break;
                     case '.':
                         $token = Dot::create();
-                        break;
-                    case '+':
-                        $token = QuantifierToken::plus();
-                        if ($input->at($input->currentIndex() + 1) === '?') {
-                            $token = [$token, Token\Quantifier\Lazy::create()];
-                            $input->next();
-                        }
-
-                        break;
-                    case '*':
-                        $token = QuantifierToken::star();
-                        if ($input->at($input->currentIndex() + 1) === '?') {
-                            $token = [$token, Token\Quantifier\Lazy::create()];
-                            $input->next();
-                        }
-
-                        break;
-                    case '?':
-                        $token = QuantifierToken::questionMark();
-                        if ($input->at($input->currentIndex() + 1) === '?') {
-                            $token = [$token, Token\Quantifier\Lazy::create()];
-                            $input->next();
-                        }
-
                         break;
                     case '^':
                         $token = Token\Anchor\Start::create();
@@ -134,14 +128,6 @@ final class Lexer
                         break;
                     case '[':
                         $token = $this->tokensForBracketList($input);
-
-                        break;
-                    case '{':
-                        $token = $this->quantifierFromTokens($input, $input->currentIndex());
-                        if ($token && $input->at($input->currentIndex() + 1) === '?') {
-                            $token = [$token, Token\Quantifier\Lazy::create()];
-                            $input->next();
-                        }
 
                         break;
                     case '|':
@@ -203,7 +189,7 @@ final class Lexer
 
         $stream->moveTo($endIndex);
 
-        return QuantifierToken::fromBracketNotation($characters);
+        return QuantifierToken::fromCharacters($characters);
     }
 
     /**

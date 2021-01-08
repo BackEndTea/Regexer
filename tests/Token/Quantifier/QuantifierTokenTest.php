@@ -12,60 +12,60 @@ final class QuantifierTokenTest extends TestCase
     public function testCantCreateInvalidQuantifier(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('foo');
+        QuantifierToken::fromCharacters('foo');
     }
 
     public function testCantCreateQuantifierWithoutBrackets(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('2,3');
+        QuantifierToken::fromCharacters('2,3');
     }
 
     public function testCantCreateFromNonNumericQuantifier(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{a,b}');
+        QuantifierToken::fromCharacters('{a,b}');
     }
 
     public function testCantCreateFromNonNumericForSingle(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{a}');
+        QuantifierToken::fromCharacters('{a}');
     }
 
     public function testCantCreateFromNonNumericForFirst(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{a,2}');
+        QuantifierToken::fromCharacters('{a,2}');
     }
 
     public function testCantCreateFromFloatQuantifier(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{2,2.7}');
+        QuantifierToken::fromCharacters('{2,2.7}');
     }
 
     public function testCantCreateFromMoreThanTwo(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{2,3,4}');
+        QuantifierToken::fromCharacters('{2,3,4}');
     }
 
     public function testCanBeOpenEnded(): void
     {
-        $token = QuantifierToken::fromBracketNotation('{2,}');
+        $token = QuantifierToken::fromCharacters('{2,}');
         $this->assertSame('{2,}', $token->asString());
     }
 
     public function testMustBeClosed(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('{1,2');
+        QuantifierToken::fromCharacters('{1,2');
     }
 
     public function testMustBeOpened(): void
     {
         $this->expectException(InvalidQuantifier::class);
-        QuantifierToken::fromBracketNotation('1,2}');
+        QuantifierToken::fromCharacters('1,2}');
     }
 }

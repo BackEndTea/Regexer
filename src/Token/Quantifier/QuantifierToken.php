@@ -25,7 +25,7 @@ final class QuantifierToken extends Token
         return new self('?');
     }
 
-    public static function fromBracketNotation(string $characters): self
+    public static function fromCharacters(string $characters): self
     {
         if (! QuantifierValidator::isValidQuantifier($characters)) {
             throw InvalidQuantifier::fromCharacters($characters);
