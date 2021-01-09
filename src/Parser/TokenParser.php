@@ -168,6 +168,11 @@ final class TokenParser implements Parser
                 continue;
             }
 
+            if ($token instanceof Token\SubPattern\Named) {
+                $pattern->setName(Node\SubPattern\Name::fromCharacters($token->asString()));
+                continue;
+            }
+
             $children = $pattern->getChildren();
             if (isset($children[count($children) - 1])) {
                 $child = $children[count($children) - 1];

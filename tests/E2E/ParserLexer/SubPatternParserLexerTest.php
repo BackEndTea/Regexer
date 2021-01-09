@@ -94,5 +94,23 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
             ],
             new Node\RootNode('/', [new Node\SubPattern([new Node\LiteralCharacters('foo')], false)], ''),
         ];
+
+        yield 'question mark delimiter' => [
+            '?(\?:foo)?',
+            [
+                Token\Delimiter::create('?'),
+                Token\SubPattern\Start::create(),
+                Token\Escaped\EscapedCharacter::fromCharacter('?'),
+                Token\LiteralCharacters::create(':foo'),
+                Token\SubPattern\End::create(),
+                Token\Delimiter::create('?'),
+            ],
+            new Node\RootNode('?', [
+                new Node\SubPattern([
+                    new Node\Escaped('?'),
+                    new Node\LiteralCharacters(':foo'),
+                ]),
+            ], ''),
+        ];
     }
 }

@@ -14,14 +14,19 @@ final class SubPattern extends NodeWithChildren
     use WithChildren;
 
     private bool $isCapturing;
+    private ?SubPattern\Name $name;
 
     /**
      * @param array<Node> $children
      */
-    public function __construct(array $children, bool $isCapturing = true)
-    {
+    public function __construct(
+        array $children,
+        bool $isCapturing = true,
+        ?Node\SubPattern\Name $name = null
+    ) {
         $this->children    = $children;
         $this->isCapturing = $isCapturing;
+        $this->name        = $name;
     }
 
     public function isCapturing(): bool
@@ -34,10 +39,20 @@ final class SubPattern extends NodeWithChildren
         $this->isCapturing = $isCapturing;
     }
 
+    public function getName(): ?SubPattern\Name
+    {
+        return $this->name;
+    }
+
+    public function setName(?SubPattern\Name $name): void
+    {
+        $this->name = $name;
+    }
+
     public function asString(): string
     {
         return '(' .
-            ($this->isCapturing ? '' : '?:') .
+            ($this->isCapturing ? ($this->name ? $this->name->asString() : '') : '?:') .
             implode(
                 '',
                 array_map(

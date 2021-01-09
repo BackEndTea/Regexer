@@ -23,6 +23,8 @@ use BackEndTea\Regexer\Token\SubPattern;
 use function array_key_last;
 use function array_pop;
 use function assert;
+use function ctype_alnum;
+use function ctype_digit;
 use function is_iterable;
 use function preg_match;
 use function strlen;
@@ -112,9 +114,12 @@ final class Lexer
                         ++$this->subPatternCount;
                         $token        = SubPattern\Start::create();
                         $currentIndex = $input->currentIndex();
-                        if ($this->delimiter !== '?' && $input->getBetween($currentIndex + 1, $currentIndex + 2) === '?:') {
-                            $input->moveTo($currentIndex + 2);
-                            $token = [$token, SubPattern\NonCapturing::create()];
+                        if ($this->delimiter === '?') {
+                            break;
+                        }
+
+                        if ($input->at($currentIndex + 1) === '?') {
+                            $token = $this->checkForSpecialSubPattern($token, $input, $currentIndex);
                         }
 
                         break;
@@ -302,5 +307,59 @@ final class Lexer
         if ($this->subPatternCount !== 0) {
             throw MissingEnd::fromOpening('(');
         }
+    }
+
+    /**
+     * @return array<Token>
+     */
+    private function checkForSpecialSubPattern(SubPattern\Start $token, Stream $input, int $currentIndex): array
+    {
+        $afterQuestionMark = $input->at($currentIndex + 2);
+        if ($afterQuestionMark === ':') {
+            $input->moveTo($currentIndex + 2);
+
+            return [$token, SubPattern\NonCapturing::create()];
+        }
+
+        if ($afterQuestionMark === "'") {
+            $closing = "'";
+            $start   = $currentIndex + 3;
+        } elseif ($afterQuestionMark === '<') {
+            $closing = '>';
+            $start   = $currentIndex + 3;
+        } elseif ($afterQuestionMark === 'P' && $input->at($currentIndex + 3) === '<') {
+            $afterQuestionMark = 'P<';
+            $closing           = '>';
+            $start             = $currentIndex + 4;
+        } else {
+            throw Token\Exception\InvalidSubPattern::forIncompleteGroupStructure();
+        }
+
+        $input->moveTo($start);
+
+        $firstChar = true;
+
+        $name = '?' . $afterQuestionMark;
+        do {
+            $char = $input->current();
+
+            if (! $firstChar && $char === $closing) {
+                $name .= $char;
+                break;
+            }
+
+            if ($firstChar && ctype_digit($char)) {
+                throw Token\Exception\InvalidSubPattern::forInvalidCaptureGroupName();
+            }
+
+            if (! ctype_alnum($char)) {
+                throw Token\Exception\InvalidSubPattern::forInvalidCaptureGroupName();
+            }
+
+            $name     .= $char;
+            $firstChar = false;
+        } while ($input->next() !== null);
+
+        return [$token, SubPattern\Named::fromName($name)];
     }
 }

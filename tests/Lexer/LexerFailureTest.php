@@ -6,6 +6,7 @@ namespace BackEndTea\Regexer\Lexer;
 
 use BackEndTea\Regexer\StringStream;
 use BackEndTea\Regexer\Token\Exception\InvalidDelimiter;
+use BackEndTea\Regexer\Token\Exception\InvalidSubPattern;
 use BackEndTea\Regexer\Token\Exception\MissingEnd;
 use BackEndTea\Regexer\Token\Exception\MissingStart;
 use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
@@ -75,5 +76,31 @@ final class LexerFailureTest extends TestCase
         yield ['/[foo\]'];
         yield ['/foo[ab\]cd'];
         yield ['/foo[ab\]cd\\'];
+    }
+
+    /**
+     * @dataProvider provideInvalidCaptureGroups
+     */
+    public function testCantHaveInvalidCaptureGroups(string $regex): void
+    {
+        $lexer = new Lexer();
+
+        $this->expectException(InvalidSubPattern::class);
+
+        Util::iterableToArray($lexer->regexToTokenStream(new StringStream($regex)));
+    }
+
+    /**
+     * @return Generator<array{string}>
+     */
+    public function provideInvalidCaptureGroups(): Generator
+    {
+        yield ['/(?<bb)/'];
+        yield ['/(?\'bb>)/'];
+        yield ['/(?asdf)'];
+        yield ['/(?P\'ad\'bb)'];
+        yield ['/(?<_ab>dd)/'];
+        yield ['/(?<3ab>dd)/'];
+        yield ['/(?F<ab>dd)/'];
     }
 }
