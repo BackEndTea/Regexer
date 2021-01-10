@@ -206,6 +206,10 @@ final class TokenParser implements Parser
             $node = new Node\Escaped(substr($token->asString(), -1));
         }
 
+        if ($token instanceof Token\SubPattern\Reference) {
+            $node = new Node\SubPattern\Reference(substr($token->asString(), 1));
+        }
+
         if ($token instanceof Token\Dot) {
             $node = new Node\Dot();
         }

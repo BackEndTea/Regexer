@@ -140,8 +140,12 @@ final class Lexer
                         break;
                     case '\\':
                         $next = $input->next();
-                        assert($next !== null);
-                        $token = Escaped\EscapedCharacter::fromCharacter($next);
+
+                        if ($next === null) {
+                            throw MissingEnd::fromDelimiter($this->delimiter);
+                        }
+
+                        $token = $this->createEscapeSequence($input);
                         break;
                 }
 
@@ -361,5 +365,23 @@ final class Lexer
         } while ($input->next() !== null);
 
         return [$token, SubPattern\Named::fromName($name)];
+    }
+
+    private function createEscapeSequence(Stream $input): Token
+    {
+        $current = $input->current();
+
+        if (ctype_digit($current)) {
+            $number = $current;
+            while (ctype_digit($input->next())) {
+                $number .= $input->current();
+            }
+
+            $input->moveTo($input->currentIndex() - 1);
+
+            return SubPattern\Reference::create($number);
+        }
+
+        return Escaped\EscapedCharacter::fromCharacter($input->current());
     }
 }

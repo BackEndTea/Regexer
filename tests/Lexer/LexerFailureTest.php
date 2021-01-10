@@ -103,4 +103,12 @@ final class LexerFailureTest extends TestCase
         yield ['/(?<3ab>dd)/'];
         yield ['/(?F<ab>dd)/'];
     }
+
+    public function testCantEndOnBackslash(): void
+    {
+        $lexer = new Lexer();
+
+        $this->expectException(MissingEnd::class);
+        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/foo\\')));
+    }
 }

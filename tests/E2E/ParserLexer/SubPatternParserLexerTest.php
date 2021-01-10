@@ -42,7 +42,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
             ),
         ];
 
-        yield 'nestedsub pattern with or' => [
+        yield 'nested sub pattern with or' => [
             '#(f(oo)|(aa))|(bar)#',
             [
                 Token\Delimiter::create('#'),
@@ -111,6 +111,95 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters(':foo'),
                 ]),
             ], ''),
+        ];
+
+        yield 'sub pattern with a backreference to it' => [
+            '/(foo|bar)=\1/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('1'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([
+                    new Node\Or_(
+                        new Node\LiteralCharacters('foo'),
+                        new Node\LiteralCharacters('bar')
+                    ),
+                ], true),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('1'),
+            ], ''),
+            [
+                'foo=foo',
+                'bar=bar',
+            ],
+            ['foo=bar'],
+        ];
+
+        yield 'double digit sub pattern' => [
+            '/(1)(2)(3)(4)(5)(6)(7)(8)(9)(0)=\10ab/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('1'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('2'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('3'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('4'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('5'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('6'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('7'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('8'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('9'),
+                Token\SubPattern\End::create(),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('0'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('10'),
+                Token\LiteralCharacters::create('ab'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+
+                new Node\SubPattern([new Node\LiteralCharacters('1')]),
+                new Node\SubPattern([new Node\LiteralCharacters('2')]),
+                new Node\SubPattern([new Node\LiteralCharacters('3')]),
+                new Node\SubPattern([new Node\LiteralCharacters('4')]),
+                new Node\SubPattern([new Node\LiteralCharacters('5')]),
+                new Node\SubPattern([new Node\LiteralCharacters('6')]),
+                new Node\SubPattern([new Node\LiteralCharacters('7')]),
+                new Node\SubPattern([new Node\LiteralCharacters('8')]),
+                new Node\SubPattern([new Node\LiteralCharacters('9')]),
+                new Node\SubPattern([new Node\LiteralCharacters('0')]),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('10'),
+                new Node\LiteralCharacters('ab'),
+            ], ''),
+            ['1234567890=0ab'],
+            ['1234567890=10ab'],
         ];
     }
 }
