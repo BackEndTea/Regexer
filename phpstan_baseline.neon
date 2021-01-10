@@ -6,7 +6,7 @@ parameters:
 			path: src/Lexer/Lexer.php
 
 		-
-			message: "#^Parameter \\#1 \\$text of function ctype_digit expects int\\|string, string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$(c|text) of function ctype_digit expects int\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Lexer/Lexer.php
 
