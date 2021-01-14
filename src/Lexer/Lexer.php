@@ -371,7 +371,19 @@ final class Lexer
     {
         $current = $input->current();
 
-        if (ctype_digit($current)) {
+        if ($current === 'g' && $input->at($input->currentIndex() + 1) === '{') {
+            $current = 'g{';
+            $input->next();
+            while ($input->next() !== '}') {
+                $current .= $input->current();
+            }
+
+            $current .= '}';
+
+            return SubPattern\Reference::create($current);
+        }
+
+        if ($current === 'g' || ctype_digit($current)) {
             $number = $current;
             while (ctype_digit($input->next())) {
                 $number .= $input->current();

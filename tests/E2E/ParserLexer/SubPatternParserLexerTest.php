@@ -134,7 +134,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),
-                new Node\SubPattern\Reference('1'),
+                new Node\SubPattern\Reference('\\', '1'),
             ], ''),
             [
                 'foo=foo',
@@ -195,11 +195,71 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([new Node\LiteralCharacters('9')]),
                 new Node\SubPattern([new Node\LiteralCharacters('0')]),
                 new Node\LiteralCharacters('='),
-                new Node\SubPattern\Reference('10'),
+                new Node\SubPattern\Reference('\\', '10'),
                 new Node\LiteralCharacters('ab'),
             ], ''),
             ['1234567890=0ab'],
             ['1234567890=10ab'],
+        ];
+
+        yield 'sub pattern with a backreference to it, with "g" notation' => [
+            '/(foo|bar)=\g1/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('g1'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([
+                    new Node\Or_(
+                        new Node\LiteralCharacters('foo'),
+                        new Node\LiteralCharacters('bar')
+                    ),
+                ], true),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('\g', '1'),
+            ], ''),
+            [
+                'foo=foo',
+                'bar=bar',
+            ],
+            ['foo=bar'],
+        ];
+
+        yield 'sub pattern with a backreference to it, with "g{}" notation' => [
+            '/(foo|bar)=\g{1}/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('g{1}'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([
+                    new Node\Or_(
+                        new Node\LiteralCharacters('foo'),
+                        new Node\LiteralCharacters('bar')
+                    ),
+                ], true),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('\g{', '1'),
+            ], ''),
+            [
+                'foo=foo',
+                'bar=bar',
+            ],
+            ['foo=bar'],
         ];
     }
 }
