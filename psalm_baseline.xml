@@ -4,8 +4,12 @@
     <ParadoxicalCondition occurrences="1">
       <code>'?'</code>
     </ParadoxicalCondition>
-    <PossiblyNullArgument occurrences="1">
+    <MixedArgument occurrences="1">
       <code>$this-&gt;delimiter</code>
+    </MixedArgument>
+    <PossiblyNullArgument occurrences="2">
+      <code>$this-&gt;delimiter</code>
+      <code>$input-&gt;next()</code>
     </PossiblyNullArgument>
   </file>
 </files>

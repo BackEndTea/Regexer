@@ -24,6 +24,5 @@ $ast = (new TokenParser(new Lexer()))->parse('/((foo)|(bar)){2,4}/');
 
 $newAst = (new Traverser([new SetNonCapturing()]))->traverse($ast);
 
-//var_dump($newAst);
 echo $newAst->asString();
 $output = '/(?:(?:foo)|(?:bar)){2,4}/';
