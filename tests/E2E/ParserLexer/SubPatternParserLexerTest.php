@@ -261,5 +261,87 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
             ],
             ['foo=bar'],
         ];
+
+        yield 'sub pattern with a relative backreference to it, with "g{}" notation' => [
+            '/(foo|bar)=\g{-1}/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('g{-1}'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([
+                    new Node\Or_(
+                        new Node\LiteralCharacters('foo'),
+                        new Node\LiteralCharacters('bar')
+                    ),
+                ], true),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('\g{', '-1'),
+            ], ''),
+            [
+                'foo=foo',
+                'bar=bar',
+            ],
+            ['foo=bar'],
+        ];
+
+        yield 'relative sub pattern with a backreference to it, with "g" notation' => [
+            '/(foo|bar)=\g-1/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\Or_::create(),
+                Token\LiteralCharacters::create('bar'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\SubPattern\Reference::create('g-1'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([
+                    new Node\Or_(
+                        new Node\LiteralCharacters('foo'),
+                        new Node\LiteralCharacters('bar')
+                    ),
+                ], true),
+                new Node\LiteralCharacters('='),
+                new Node\SubPattern\Reference('\g', '-1'),
+            ], ''),
+            [
+                'foo=foo',
+                'bar=bar',
+            ],
+            ['foo=bar'],
+        ];
+
+        yield '\-1 is not a relative back reference' => [
+            '/(foo)=\-1/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\LiteralCharacters::create('foo'),
+                Token\SubPattern\End::create(),
+                Token\LiteralCharacters::create('='),
+                Token\Escaped\EscapedCharacter::fromCharacter('-'),
+                Token\LiteralCharacters::create('1'),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode('/', [
+                new Node\SubPattern([new Node\LiteralCharacters('foo')]),
+                new Node\LiteralCharacters('='),
+                new Node\Escaped('-'),
+                new Node\LiteralCharacters('1'),
+            ], ''),
+            ['foo=-1'],
+            ['foo=foo'],
+        ];
     }
 }

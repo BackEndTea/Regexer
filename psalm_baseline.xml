@@ -11,5 +11,8 @@
       <code>$this-&gt;delimiter</code>
       <code>$input-&gt;next()</code>
     </PossiblyNullArgument>
+    <PossiblyNullOperand occurrences="1">
+      <code>$input-&gt;next()</code>
+    </PossiblyNullOperand>
   </file>
 </files>
