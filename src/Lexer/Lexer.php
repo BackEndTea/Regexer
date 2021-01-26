@@ -371,6 +371,10 @@ final class Lexer
     {
         $current = $input->current();
 
+        if ($current === '-') {
+            return Escaped\EscapedCharacter::fromCharacter('-');
+        }
+
         if ($current === 'g' && $input->at($input->currentIndex() + 1) === '{') {
             $current = 'g{';
             $input->next();
@@ -384,6 +388,10 @@ final class Lexer
         }
 
         if ($current === 'g' || ctype_digit($current)) {
+            if ($current === 'g') {
+                $current .= $input->next();
+            }
+
             $number = $current;
             while (ctype_digit($input->next())) {
                 $number .= $input->current();
