@@ -24,10 +24,10 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.64",
+        "phpstan/phpstan": "^0.12.70",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.3",
-        "infection/infection": "^0.20.2",
+        "vimeo/psalm": "^4.4",
+        "infection/infection": "^0.21",
         "doctrine/coding-standard": "^8.2"
     }
 }

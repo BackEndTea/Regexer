@@ -17,6 +17,10 @@ final class Reference extends Node
         '\\' => '',
         '\g' => '',
         '\g{' => '}',
+        '\k{' => '}',
+        '\k<' => '>',
+        '\k\'' => '\'',
+        '(?P=' => ')',
     ];
 
     private string $referenceTo;

@@ -11,6 +11,7 @@ use BackEndTea\Regexer\Token\Delimiter;
 use BackEndTea\Regexer\Token\Dot;
 use BackEndTea\Regexer\Token\Escaped;
 use BackEndTea\Regexer\Token\Exception\InvalidDelimiter;
+use BackEndTea\Regexer\Token\Exception\InvalidReference;
 use BackEndTea\Regexer\Token\Exception\MissingEnd;
 use BackEndTea\Regexer\Token\Exception\MissingStart;
 use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
@@ -111,6 +112,20 @@ final class Lexer
                         $token = Token\Anchor\End::create();
                         break;
                     case '(':
+                        if ($input->getBetween($input->currentIndex(), $input->currentIndex() + 3) === '(?P=') {
+                            $referenceTo = '';
+                            while ($input->next() !== null) {
+                                $current      = $input->current();
+                                $referenceTo .= $current;
+                                if ($current === ')') {
+                                    break;
+                                }
+                            }
+
+                            $token = SubPattern\Reference::forPNotation($referenceTo);
+                            break;
+                        }
+
                         ++$this->subPatternCount;
                         $token        = SubPattern\Start::create();
                         $currentIndex = $input->currentIndex();
@@ -373,6 +388,38 @@ final class Lexer
 
         if ($current === '-') {
             return Escaped\EscapedCharacter::fromCharacter('-');
+        }
+
+        if ($current === 'k') {
+            $next = $input->next();
+            switch ($next) {
+                case '{':
+                    $closing = '}';
+                    break;
+                case '\'':
+                    $closing = '\'';
+                    break;
+                case '<':
+                    $closing = '>';
+                    break;
+                case null:
+                    throw MissingEnd::fromDelimiter($this->delimiter);
+
+                default:
+                    throw InvalidReference::fromKNotation($next);
+            }
+
+            $start       = 'k' . $next;
+            $referenceTo = '';
+            while ($input->next() !== null) {
+                $current      = $input->current();
+                $referenceTo .= $current;
+                if ($current === $closing) {
+                    break;
+                }
+            }
+
+            return SubPattern\Reference::create($start . $referenceTo);
         }
 
         if ($current === 'g' && $input->at($input->currentIndex() + 1) === '{') {

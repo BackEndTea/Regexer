@@ -7,7 +7,7 @@
     <MixedArgument occurrences="1">
       <code>$this-&gt;delimiter</code>
     </MixedArgument>
-    <PossiblyNullArgument occurrences="2">
+    <PossiblyNullArgument occurrences="3">
       <code>$this-&gt;delimiter</code>
       <code>$input-&gt;next()</code>
     </PossiblyNullArgument>
