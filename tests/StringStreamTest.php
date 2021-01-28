@@ -28,4 +28,11 @@ final class StringStreamTest extends TestCase
 
         $this->assertSame('{123}', $stream->getBetween(3, 7));
     }
+
+    public function testAtWillReturnNullIfOutOfBounds(): void
+    {
+        $stream = new StringStream('0123');
+
+        $this->assertNull($stream->at(4));
+    }
 }

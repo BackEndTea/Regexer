@@ -209,7 +209,11 @@ final class TokenParser implements Parser
         if ($token instanceof Token\SubPattern\Reference) {
             $tokenString = $token->asString();
 
-            if ($tokenString[1] !== 'g') {
+            if ($tokenString[1] === 'k') {
+                $node = new Node\SubPattern\Reference('\\k' . $tokenString[2], substr($token->asString(), 3, -1));
+            } elseif ($tokenString[0] === '(') {
+                $node = new Node\SubPattern\Reference('(?P=', substr($token->asString(), 4, -1));
+            } elseif ($tokenString[1] !== 'g') {
                 $node = new Node\SubPattern\Reference('\\', substr($token->asString(), 1));
             } elseif ($tokenString[2] === '{') {
                 $node = new Node\SubPattern\Reference('\\g{', substr($token->asString(), 3, -1));

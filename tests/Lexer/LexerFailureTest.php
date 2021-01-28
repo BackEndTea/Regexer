@@ -6,6 +6,7 @@ namespace BackEndTea\Regexer\Lexer;
 
 use BackEndTea\Regexer\StringStream;
 use BackEndTea\Regexer\Token\Exception\InvalidDelimiter;
+use BackEndTea\Regexer\Token\Exception\InvalidReference;
 use BackEndTea\Regexer\Token\Exception\InvalidSubPattern;
 use BackEndTea\Regexer\Token\Exception\MissingEnd;
 use BackEndTea\Regexer\Token\Exception\MissingStart;
@@ -110,5 +111,21 @@ final class LexerFailureTest extends TestCase
 
         $this->expectException(MissingEnd::class);
         Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/foo\\')));
+    }
+
+    public function testInvalidKReference(): void
+    {
+        $lexer = new Lexer();
+
+        $this->expectException(InvalidReference::class);
+        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/\kfoo/')));
+    }
+
+    public function testCantEndOnUnescapedK(): void
+    {
+        $lexer = new Lexer();
+
+        $this->expectException(MissingEnd::class);
+        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/\k')));
     }
 }
