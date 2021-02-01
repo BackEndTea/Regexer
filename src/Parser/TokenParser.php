@@ -299,7 +299,7 @@ final class TokenParser implements Parser
         }
 
         if (! $last instanceof Node\LiteralCharacters) {
-            $parent->setRight($node = Node\Quantified::fromToken($last, $token));
+            $parent->setRight($node = Node\Quantified::fromString($last, $token->asString()));
             if ($tokens[$i + 1] instanceof Token\Quantifier\Lazy) {
                 $node->setLazy(true);
                 $i++;
@@ -310,7 +310,7 @@ final class TokenParser implements Parser
 
         $lastCharactes = $last->getCharacters();
         if (strlen($lastCharactes) <= 1) {
-            $parent->setRight($node = Node\Quantified::fromToken($last, $token));
+            $parent->setRight($node = Node\Quantified::fromString($last, $token->asString()));
             if ($tokens[$i + 1] instanceof Token\Quantifier\Lazy) {
                 $node->setLazy(true);
                 $i++;
@@ -322,7 +322,7 @@ final class TokenParser implements Parser
         $last->setCharacters(substr($lastCharactes, 0, -1));
         $last = new Node\LiteralCharacters(substr($lastCharactes, -1));
 
-        $parent->addChild($node = Node\Quantified::fromToken($last, $token));
+        $parent->addChild($node = Node\Quantified::fromString($last, $token->asString()));
         if ($tokens[$i + 1] instanceof Token\Quantifier\Lazy) {
             $node->setLazy(true);
             $i++;
@@ -354,7 +354,7 @@ final class TokenParser implements Parser
             $last = new Node\LiteralCharacters(substr($lastCharactes, -1));
         }
 
-        $children[] = $node = Node\Quantified::fromToken($last, $token);
+        $children[] = $node = Node\Quantified::fromString($last, $token->asString());
 
         $parent->setChildren($children);
 

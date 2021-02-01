@@ -15,6 +15,16 @@ final class Escaped extends Node
         $this->escapedCharacter = $escapedCharacter;
     }
 
+    public function getEscapedCharacter(): string
+    {
+        return $this->escapedCharacter;
+    }
+
+    public function setEscapedCharacter(string $escapedCharacter): void
+    {
+        $this->escapedCharacter = $escapedCharacter;
+    }
+
     public function asString(): string
     {
         return '\\' . $this->escapedCharacter;

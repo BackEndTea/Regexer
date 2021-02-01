@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
-use LogicException;
+use InvalidArgumentException;
 
 use function array_values;
 use function count;
@@ -55,7 +55,7 @@ final class Or_ extends NodeWithChildren
     public function setChildren(array $children): void
     {
         if (count($children) !== 2) {
-            throw new LogicException('Or can only have 2 children');
+            throw new InvalidArgumentException('Or can only have 2 children');
         }
 
         $children = array_values($children);

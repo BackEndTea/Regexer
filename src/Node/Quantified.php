@@ -5,29 +5,33 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
-use BackEndTea\Regexer\Token\Quantifier\QuantifierToken;
 use BackEndTea\Regexer\Util\QuantifierValidator;
-use LogicException;
+use InvalidArgumentException;
 
 use function array_key_first;
 use function count;
+use function sprintf;
 
 final class Quantified extends NodeWithChildren
 {
     private Node $quantifiedNode;
-    private string $characters;
     private int $min;
     private ?int $max;
     private bool $lazy;
 
-    public function __construct(Node $quantifiedNode, string $characters, bool $lazy)
+    public function __construct(Node $quantifiedNode, int $min, ?int $max, bool $lazy)
     {
-        [$min, $max]          = QuantifierValidator::getMinAndMaxFromCharacters($characters);
         $this->quantifiedNode = $quantifiedNode;
-        $this->characters     = $characters;
         $this->min            = $min;
         $this->max            = $max;
         $this->lazy           = $lazy;
+    }
+
+    public static function fromString(Node $quantifiedNode, string $quantifierString): self
+    {
+        [$min, $max] = QuantifierValidator::getMinAndMaxFromCharacters($quantifierString);
+
+        return new self($quantifiedNode, $min, $max, false);
     }
 
     public function isLazy(): bool
@@ -40,11 +44,6 @@ final class Quantified extends NodeWithChildren
         $this->lazy = $lazy;
     }
 
-    public static function fromToken(Node $quantifiedNode, QuantifierToken $token): self
-    {
-        return new self($quantifiedNode, $token->asString(), false);
-    }
-
     public function getQuantifiedNode(): Node
     {
         return $this->quantifiedNode;
@@ -53,16 +52,6 @@ final class Quantified extends NodeWithChildren
     public function setQuantifiedNode(Node $quantifiedNode): void
     {
         $this->quantifiedNode = $quantifiedNode;
-    }
-
-    public function getCharacters(): string
-    {
-        return $this->characters;
-    }
-
-    public function setCharacters(string $characters): void
-    {
-        $this->characters = $characters;
     }
 
     public function getMin(): int
@@ -87,7 +76,34 @@ final class Quantified extends NodeWithChildren
 
     public function asString(): string
     {
-        return $this->quantifiedNode . $this->characters . ($this->lazy ? '?' : '');
+        return $this->quantifiedNode->asString() . $this->minAndMaxToString($this->min, $this->max) . ($this->lazy ? '?' : '');
+    }
+
+    private function minAndMaxToString(int $min, ?int $max): string
+    {
+        if ($min === 0) {
+            if ($max === null) {
+                return '*';
+            }
+
+            if ($max === 1) {
+                return '?';
+            }
+        }
+
+        if ($min === 1 && $max === null) {
+            return '+';
+        }
+
+        if ($min === $max) {
+            return sprintf('{%d}', $min);
+        }
+
+        if ($max === null) {
+            return sprintf('{%d,}', $min);
+        }
+
+        return sprintf('{%d,%d}', $min, $max);
     }
 
     /**
@@ -104,7 +120,7 @@ final class Quantified extends NodeWithChildren
     public function setChildren(array $children): void
     {
         if (count($children) !== 1) {
-            throw new LogicException('Can only quantify a single child');
+            throw new InvalidArgumentException('Can only quantify a single child');
         }
 
         $this->quantifiedNode = $children[array_key_first($children)];
@@ -112,6 +128,6 @@ final class Quantified extends NodeWithChildren
 
     public function addChild(Node $node): void
     {
-        throw new LogicException('cant add child to quantified node');
+        throw new InvalidArgumentException('cant add child to quantified node');
     }
 }

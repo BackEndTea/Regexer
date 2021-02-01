@@ -166,7 +166,8 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('?', [
                 new Node\Quantified(
                     new Node\LiteralCharacters('a'),
-                    '+',
+                    1,
+                    null,
                     false
                 ),
             ], ''),
@@ -183,7 +184,8 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('?', [
                 new Node\Quantified(
                     new Node\LiteralCharacters('a'),
-                    '{2}',
+                    2,
+                    2,
                     false
                 ),
             ], ''),
