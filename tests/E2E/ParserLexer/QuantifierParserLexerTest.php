@@ -24,7 +24,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('/', [
                 new Node\Quantified(
                     new Node\LiteralCharacters('a'),
-                    '{3,5}',
+                    3,
+                    5,
                     false
                 ),
             ], ''),
@@ -38,7 +39,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 Token\Quantifier\QuantifierToken::fromCharacters('{3}'),
                 Token\Delimiter::create('/'),
             ],
-            new Node\RootNode('/', [new Node\Quantified(new Node\LiteralCharacters('a'), '{3}', false)], ''),
+            new Node\RootNode('/', [new Node\Quantified(new Node\LiteralCharacters('a'), 3, 3, false)], ''),
         ];
 
         yield 'Escaped quantifier' => [
@@ -95,14 +96,14 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\Or_(
                     new Node\SubPattern([
                         new Node\LiteralCharacters('{'),
-                        new Node\Quantified(new Node\Escaped('d'), '+', false),
+                        new Node\Quantified(new Node\Escaped('d'), 1, null, false),
                         new Node\LiteralCharacters('}'),
                     ]),
                     new Node\SubPattern([
                         new Node\LiteralCharacters('{'),
-                        new Node\Quantified(new Node\Escaped('d'), '+', false),
+                        new Node\Quantified(new Node\Escaped('d'), 1, null, false),
                         new Node\LiteralCharacters(','),
-                        new Node\Quantified(new Node\Escaped('d'), '*', false),
+                        new Node\Quantified(new Node\Escaped('d'), 0, null, false),
                         new Node\LiteralCharacters('}'),
                     ])
                 ),
@@ -122,7 +123,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\LiteralCharacters('a'),
                 new Node\Quantified(
                     new Node\LiteralCharacters('b'),
-                    '{2}',
+                    2,
+                    2,
                     false
                 ),
                 new Node\LiteralCharacters('cd'),
@@ -149,7 +151,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('a'),
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '{2}',
+                            2,
+                            2,
                             false
                         ),
                         new Node\LiteralCharacters('cd'),
@@ -176,7 +179,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('a'),
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '{2}',
+                            2,
+                            2,
                             false
                         ),
                         new Node\LiteralCharacters('cd'),
@@ -202,7 +206,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\LiteralCharacters('a'),
-                            '{2}',
+                            2,
+                            2,
                             false
                         ),
                         new Node\LiteralCharacters('bcd'),
@@ -224,7 +229,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                 new Node\LiteralCharacters('fo'),
                 new Node\Quantified(
                     new Node\LiteralCharacters('o'),
-                    '?',
+                    0,
+                    1,
                     true
                 ),
             ], ''),
@@ -248,7 +254,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\Escaped('d'),
-                            '{2}',
+                            2,
+                            2,
                             true
                         ),
                         new Node\Escaped('D'),
@@ -275,7 +282,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('a'),
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '*',
+                            0,
+                            null,
                             true
                         ),
                     ])
@@ -299,7 +307,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('fo'),
                     new Node\Quantified(
                         new Node\LiteralCharacters('a'),
-                        '*',
+                        0,
+                        null,
                         true
                     )
                 ),
@@ -318,7 +327,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('/', [
                 new Node\Quantified(
                     new Node\LiteralCharacters('a'),
-                    '+',
+                    1,
+                    null,
                     true
                 ),
             ], ''),

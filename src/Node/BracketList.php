@@ -13,7 +13,7 @@ final class BracketList extends NodeWithChildren
 {
     use WithChildren;
 
-    private bool $isNegated;
+    private bool $negated;
 
     /**
      * @param array<Node> $children
@@ -22,19 +22,24 @@ final class BracketList extends NodeWithChildren
         bool $isNegated,
         array $children
     ) {
-        $this->isNegated = $isNegated;
-        $this->children  = $children;
+        $this->negated  = $isNegated;
+        $this->children = $children;
     }
 
     public function isNegated(): bool
     {
-        return $this->isNegated;
+        return $this->negated;
+    }
+
+    public function setNegated(bool $negated): void
+    {
+        $this->negated = $negated;
     }
 
     public function asString(): string
     {
         return '[' .
-            ($this->isNegated ? '^' : '') .
+            ($this->negated ? '^' : '') .
             implode(
                 '',
                 array_map(

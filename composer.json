@@ -28,6 +28,8 @@
         "phpunit/phpunit": "^9.5",
         "vimeo/psalm": "^4.4",
         "infection/infection": "^0.21",
-        "doctrine/coding-standard": "^8.2"
+        "doctrine/coding-standard": "^8.2",
+        "phpstan/phpstan-phpunit": "^0.12.17",
+        "phpstan/extension-installer": "^1.1"
     }
 }

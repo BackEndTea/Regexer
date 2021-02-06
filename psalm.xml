@@ -21,5 +21,11 @@
                 <directory name="tests"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
+
+        <DocblockTypeContradiction>
+            <errorLevel type="suppress">
+                <directory name="tests"/>
+            </errorLevel>
+        </DocblockTypeContradiction>
     </issueHandlers>
 </psalm>

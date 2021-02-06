@@ -8,6 +8,14 @@ use BackEndTea\Regexer\Node;
 
 final class OneOf extends Node
 {
+    private string $characters;
+
+    public function __construct(
+        string $characters
+    ) {
+        $this->characters = $characters;
+    }
+
     public function getCharacters(): string
     {
         return $this->characters;
@@ -18,16 +26,8 @@ final class OneOf extends Node
         $this->characters = $characters;
     }
 
-    private string $characters;
-
-    public function __construct(
-        string $characters
-    ) {
-        $this->characters = $characters;
-    }
-
     public function asString(): string
     {
-        return $this->getCharacters();
+        return $this->characters;
     }
 }

@@ -31,7 +31,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                         new Node\Quantified(
                             new Node\Escaped('d'),
-                            '{2,3}',
+                            2,
+                            3,
                             false
                         ),
                         new Node\Escaped('D'),
@@ -60,7 +61,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                         new Node\Quantified(
                             new Node\Escaped('d'),
-                            '{2,3}',
+                            2,
+                            3,
                             false
                         ),
                         new Node\Escaped('D'),
@@ -87,7 +89,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ba'),
                         new Node\Quantified(
                             new Node\LiteralCharacters('r'),
-                            '{2,}',
+                            2,
+                            null,
                             false
                         ),
                     ])
@@ -112,7 +115,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '+',
+                            1,
+                            null,
                             false
                         ),
                         new Node\LiteralCharacters('r'),
@@ -142,7 +146,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('ab'),
                             new Node\Quantified(
                                 new Node\Escaped('d'),
-                                '{2,3}',
+                                2,
+                                3,
                                 false
                             ),
                             new Node\Escaped('D'),
@@ -175,7 +180,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('ab'),
                             new Node\Quantified(
                                 new Node\Escaped('d'),
-                                '{2,3}',
+                                2,
+                                3,
                                 false
                             ),
                             new Node\Escaped('D'),
@@ -239,7 +245,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\NodeGroup([
                                 new Node\Quantified(
                                     new Node\LiteralCharacters('b'),
-                                    '{2,3}',
+                                    2,
+                                    3,
                                     false
                                 ),
                                 new Node\LiteralCharacters('ar'),
@@ -247,7 +254,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\NodeGroup([
                                 new Node\Quantified(
                                     new Node\LiteralCharacters('c'),
-                                    '{2}',
+                                    2,
+                                    2,
                                     false
                                 ),
                                 new Node\Escaped('d'),
@@ -275,7 +283,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '?',
+                            0,
+                            1,
                             false
                         ),
                         new Node\LiteralCharacters('r'),
@@ -301,7 +310,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\LiteralCharacters('b'),
-                            '*',
+                            0,
+                            null,
                             false
                         ),
                         new Node\LiteralCharacters('r'),
@@ -350,7 +360,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\NodeGroup([
                         new Node\Quantified(
                             new Node\Escaped('d'),
-                            '?',
+                            0,
+                            1,
                             false
                         ),
                         new Node\LiteralCharacters('ab'),
@@ -370,7 +381,8 @@ final class OrParserLexerTest extends ParserLexerTestCase
             new Node\RootNode('/', [
                 new Node\Quantified(
                     new Node\LiteralCharacters('{'),
-                    '?',
+                    0,
+                    1,
                     false
                 ),
             ], ''),
