@@ -11,7 +11,7 @@ use Generator;
 
 final class SimpleParserLexerTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'Only Delimiters' => [
             '//',
@@ -56,10 +56,10 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ],
-                'i'
+                'i',
             ),
         ];
 
@@ -85,7 +85,7 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                         ),
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -122,7 +122,7 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('fo'),
                         new Node\Dot(),
                     ]),
-                    new Node\LiteralCharacters('bar')
+                    new Node\LiteralCharacters('bar'),
                 ),
             ], ''),
         ];
@@ -168,7 +168,7 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('a'),
                     1,
                     null,
-                    false
+                    false,
                 ),
             ], ''),
         ];
@@ -186,7 +186,7 @@ final class SimpleParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('a'),
                     2,
                     2,
-                    false
+                    false,
                 ),
             ], ''),
         ];

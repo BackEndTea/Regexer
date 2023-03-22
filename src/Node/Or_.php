@@ -12,13 +12,8 @@ use function count;
 
 final class Or_ extends NodeWithChildren
 {
-    private Node $left;
-    private Node $right;
-
-    public function __construct(Node $left, Node $right)
+    public function __construct(private Node $left, private Node $right)
     {
-        $this->left  = $left;
-        $this->right = $right;
     }
 
     public function getLeft(): Node
@@ -41,17 +36,13 @@ final class Or_ extends NodeWithChildren
         $this->right = $right;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getChildren(): array
     {
         return [$this->left, $this->right];
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function setChildren(array $children): void
     {
         if (count($children) !== 2) {

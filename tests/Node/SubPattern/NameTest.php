@@ -10,19 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class NameTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidCharacters
-     */
+    /** @dataProvider provideInvalidCharacters */
     public function testCantBeCreatedFromInvalidCharacters(string $invalid): void
     {
         $this->expectException(InvalidArgumentException::class);
         Name::fromCharacters($invalid);
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidCharacters(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideInvalidCharacters(): Generator
     {
         yield ['foo'];
         yield ['?:ab:'];

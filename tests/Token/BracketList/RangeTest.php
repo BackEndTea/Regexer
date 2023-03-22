@@ -10,19 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class RangeTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidRangeCases
-     */
+    /** @dataProvider provideInvalidRangeCases */
     public function testCanNotBeCreatedFromInvalidCharacters(string $invalidRange): void
     {
         $this->expectException(InvalidArgumentException::class);
         Range::fromCharacters($invalidRange);
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidRangeCases(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideInvalidRangeCases(): Generator
     {
         yield ['foo'];
         yield ['a'];
@@ -31,18 +27,14 @@ final class RangeTest extends TestCase
         yield ['\b-22'];
     }
 
-    /**
-     * @dataProvider provideValidRangeCases
-     */
+    /** @dataProvider provideValidRangeCases */
     public function canBeRangeWithDash(string $inputRange): void
     {
         $this->assertSame($inputRange, Range::fromCharacters($inputRange)->asString());
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideValidRangeCases(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideValidRangeCases(): Generator
     {
         yield ['\--\]'];
         yield ['\]-\-'];

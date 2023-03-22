@@ -8,12 +8,9 @@ use BackEndTea\Regexer\Node;
 
 final class OneOf extends Node
 {
-    private string $characters;
-
     public function __construct(
-        string $characters
+        private string $characters,
     ) {
-        $this->characters = $characters;
     }
 
     public function getCharacters(): string

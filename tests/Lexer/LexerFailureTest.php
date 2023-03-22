@@ -13,119 +13,100 @@ use BackEndTea\Regexer\Token\Exception\MissingStart;
 use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
 use BackEndTea\Regexer\Util\Util;
 use Generator;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
+use Throwable;
+
+use function preg_match;
+use function sprintf;
 
 final class LexerFailureTest extends TestCase
 {
-    public function testFailsWithNoEndTag(): void
-    {
-        $lexer = new Lexer();
-
-        $this->expectException(MissingEnd::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/a(/')));
-    }
-
-    public function testCantHaveDelimiterInsideOfBracketList(): void
-    {
-        $lexer = new Lexer();
-
-        $this->expectException(InvalidDelimiter::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/[123/456]/')));
-    }
-
-    public function testNoEndingDelimiter(): void
-    {
-        $lexer = new Lexer();
-
-        $this->expectException(MissingEnd::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/asdfasdf')));
-    }
-
-    public function testClosingSubPatternWithoutOpening(): void
-    {
-        $lexer = new Lexer();
-
-        $this->expectException(MissingStart::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/foo)/')));
-    }
-
-    public function testInvalidDelimiter(): void
-    {
-        $lexer = new Lexer();
-
-        $this->expectException(InvalidDelimiter::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('a9ujkla')));
-    }
-
     /**
-     * @dataProvider provideMissingEndingTags
+     * @param class-string<Throwable> $expectedException
+     *
+     * @dataProvider provideInvalidRegexes
      */
-    public function testEscapedBracketListEnding(string $regex): void
+    public function testItFailsOnParsing(string $input, string $expectedException): void
     {
+        self::assertFalse(@preg_match($input, 'foo'), sprintf(
+            'Expected regex "%s" to be an invalid regex',
+            $input,
+        ));
         $lexer = new Lexer();
 
-        $this->expectException(UnclosedBracketList::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream($regex)));
+        $this->expectException($expectedException);
+        Util::iterableToList($lexer->regexToTokenStream(new StringStream($input)));
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideMissingEndingTags(): Generator
+    /** @return Generator<array{string, class-string<Throwable>}> */
+    public static function provideInvalidRegexes(): Generator
     {
-        yield ['/a[/'];
-        yield ['/[foo\]'];
-        yield ['/foo[ab\]cd'];
-        yield ['/foo[ab\]cd\\'];
-    }
+        yield 'no end tag' => [
+            '/a(/',
+            MissingEnd::class,
+        ];
 
-    /**
-     * @dataProvider provideInvalidCaptureGroups
-     */
-    public function testCantHaveInvalidCaptureGroups(string $regex): void
-    {
-        $lexer = new Lexer();
+        yield 'delimiter inside of bracket list' => [
+            '/[123/456]/',
+            InvalidDelimiter::class,
+        ];
 
-        $this->expectException(InvalidSubPattern::class);
+        yield 'no ending delimiter' => [
+            '/asdfasdf',
+            MissingEnd::class,
+        ];
 
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream($regex)));
-    }
+        yield 'No ending delimiter with special delimiter' => [
+            '(asdfasdf',
+            MissingEnd::class,
+        ];
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidCaptureGroups(): Generator
-    {
-        yield ['/(?<bb)/'];
-        yield ['/(?\'bb>)/'];
-        yield ['/(?asdf)'];
-        yield ['/(?P\'ad\'bb)'];
-        yield ['/(?<_ab>dd)/'];
-        yield ['/(?<3ab>dd)/'];
-        yield ['/(?F<ab>dd)/'];
-    }
+        yield 'No ending delimiter with special delimiter that attempts to close with same' => [
+            '(asdfasdf(',
+            MissingEnd::class,
+        ];
 
-    public function testCantEndOnBackslash(): void
-    {
-        $lexer = new Lexer();
+        yield 'closing subpattern without opening' => [
+            '/foo)/',
+            MissingStart::class,
+        ];
 
-        $this->expectException(MissingEnd::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/foo\\')));
-    }
+        yield 'invalid delimiter "a"' => [
+            'a9ujkla',
+            InvalidDelimiter::class,
+        ];
 
-    public function testInvalidKReference(): void
-    {
-        $lexer = new Lexer();
+        yield ['/a[/', UnclosedBracketList::class];
+        yield ['/[foo\]', UnclosedBracketList::class];
+        yield ['/foo[ab\]cd', UnclosedBracketList::class];
+        yield ['/foo[ab\]cd\\', UnclosedBracketList::class];
 
-        $this->expectException(InvalidReference::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/\kfoo/')));
-    }
+        yield ['/(?<bb)/', InvalidSubPattern::class];
+        yield ['/(?\'bb>)/', InvalidSubPattern::class];
+        yield ['/(?asdf)', InvalidSubPattern::class];
+        yield ['/(?P\'ad\'bb)', InvalidSubPattern::class];
 
-    public function testCantEndOnUnescapedK(): void
-    {
-        $lexer = new Lexer();
+        /**
+         * TODO: This is a valid regex, support it
+         */
 
-        $this->expectException(MissingEnd::class);
-        Util::iterableToArray($lexer->regexToTokenStream(new StringStream('/\k')));
+//        yield ['/(?<_ab>dd)/', InvalidSubPattern::class];
+        yield ['/(?<3ab>dd)/', InvalidSubPattern::class];
+        yield ['/(?F<ab>dd)/', InvalidSubPattern::class];
+
+        yield 'cant end on backslash' => [
+            '/foo\\',
+            MissingEnd::class,
+        ];
+
+        yield 'invalid K reference' => [
+            '/\kfoo/',
+            InvalidReference::class,
+        ];
+
+        yield 'cant end on unescaped K' => [
+            '/\k',
+            MissingEnd::class,
+        ];
     }
 }

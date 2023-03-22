@@ -15,12 +15,10 @@ final class BracketList extends NodeWithChildren
 
     private bool $negated;
 
-    /**
-     * @param array<Node> $children
-     */
+    /** @param array<Node> $children */
     public function __construct(
         bool $isNegated,
-        array $children
+        array $children,
     ) {
         $this->negated  = $isNegated;
         $this->children = $children;
@@ -44,8 +42,8 @@ final class BracketList extends NodeWithChildren
                 '',
                 array_map(
                     static fn (Node $node): string => $node->asString(),
-                    $this->children
-                )
+                    $this->children,
+                ),
             )
             . ']';
     }

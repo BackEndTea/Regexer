@@ -40,7 +40,7 @@ final class Or_Test extends TestCase
     {
         $or = new Or_(
             new NoopNode(),
-            new NoopNode()
+            new NoopNode(),
         );
 
         $this->expectException(InvalidArgumentException::class);
@@ -51,7 +51,7 @@ final class Or_Test extends TestCase
     {
         $or = new Or_(
             new NoopNode(),
-            new NoopNode()
+            new NoopNode(),
         );
 
         $or->setChildren([

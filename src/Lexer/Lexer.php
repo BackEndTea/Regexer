@@ -33,13 +33,11 @@ use function substr;
 
 final class Lexer
 {
-    private ?string $delimiter   = null;
-    private int $subPatternCount = 0;
-    private bool $hadEnded       = false;
+    private string|null $delimiter = null;
+    private int $subPatternCount   = 0;
+    private bool $hadEnded         = false;
 
-    /**
-     * @return iterable<Token>
-     */
+    /** @return iterable<Token> */
     public function regexToTokenStream(Stream $input): iterable
     {
         // reset to orignial state
@@ -66,9 +64,8 @@ final class Lexer
                 continue;
             }
 
-            if ($char === $this->delimiter) {
+            if (Delimiter::isEndingFor($this->delimiter, $char) && $this->subPatternCount === 0) {
                 $this->hadEnded = true;
-                $this->assertAllowedToEnd();
 
                 yield Delimiter::create($char);
 
@@ -79,11 +76,14 @@ final class Lexer
 
             do {
                 $token = null;
+
+                if (Delimiter::isEndingFor($this->delimiter, $char) && $this->subPatternCount === 0) {
+                    $this->hadEnded = true;
+                    $token          = Delimiter::create($char);
+                    continue;
+                }
+
                 switch ($char) {
-                    case $this->delimiter:
-                        $this->hadEnded = true;
-                        $token          = Delimiter::create($char);
-                        break;
                     case '+':
                     case '*':
                     case '?':
@@ -140,6 +140,12 @@ final class Lexer
                         break;
                     case ')':
                         if ($this->subPatternCount === 0) {
+                            if ($this->delimiter === '(') {
+                                $this->hadEnded = true;
+                                $token          = Delimiter::create($char);
+                                break;
+                            }
+
                             throw MissingStart::fromEnding('(');
                         }
 
@@ -197,7 +203,7 @@ final class Lexer
         }
     }
 
-    private function quantifierFromTokens(Stream $stream, int $currentIndex): ?Token
+    private function quantifierFromTokens(Stream $stream, int $currentIndex): Token|null
     {
         $endIndex = $stream->indexOfNext('}', $currentIndex);
         if ($endIndex === null) {
@@ -216,9 +222,7 @@ final class Lexer
         return QuantifierToken::fromCharacters($characters);
     }
 
-    /**
-     * @return iterable<Token>
-     */
+    /** @return iterable<Token> */
     private function tokensForBracketList(Stream $input): iterable
     {
         // Quick check, it may be escaped, but we don't know yet
@@ -321,16 +325,7 @@ final class Lexer
         }
     }
 
-    private function assertAllowedToEnd(): void
-    {
-        if ($this->subPatternCount !== 0) {
-            throw MissingEnd::fromOpening('(');
-        }
-    }
-
-    /**
-     * @return array<Token>
-     */
+    /** @return array<Token> */
     private function checkForSpecialSubPattern(SubPattern\Start $token, Stream $input, int $currentIndex): array
     {
         $afterQuestionMark = $input->at($currentIndex + 2);

@@ -11,7 +11,7 @@ use Generator;
 
 final class OrParserLexerTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'multiple parts on left side' => [
             '/ab\d{2,3}\D|bar/',
@@ -33,11 +33,11 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\Escaped('d'),
                             2,
                             3,
-                            false
+                            false,
                         ),
                         new Node\Escaped('D'),
                     ]),
-                    new Node\LiteralCharacters('bar')
+                    new Node\LiteralCharacters('bar'),
                 ),
             ], ''),
         ];
@@ -63,7 +63,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\Escaped('d'),
                             2,
                             3,
-                            false
+                            false,
                         ),
                         new Node\Escaped('D'),
                     ]),
@@ -91,9 +91,9 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('r'),
                             2,
                             null,
-                            false
+                            false,
                         ),
-                    ])
+                    ]),
                 ),
             ], 'i'),
         ];
@@ -117,10 +117,10 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             1,
                             null,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('r'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -148,11 +148,11 @@ final class OrParserLexerTest extends ParserLexerTestCase
                                 new Node\Escaped('d'),
                                 2,
                                 3,
-                                false
+                                false,
                             ),
                             new Node\Escaped('D'),
                         ]),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ]),
             ], ''),
@@ -182,7 +182,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                                 new Node\Escaped('d'),
                                 2,
                                 3,
-                                false
+                                false,
                             ),
                             new Node\Escaped('D'),
                         ]),
@@ -237,7 +237,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                                     new Node\LiteralCharacters('bar'),
                                     new Node\LiteralCharacters('baz'),
                                 ),
-                            ])
+                            ]),
                         ),
                     ]),
                     new Node\SubPattern([
@@ -247,7 +247,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                                     new Node\LiteralCharacters('b'),
                                     2,
                                     3,
-                                    false
+                                    false,
                                 ),
                                 new Node\LiteralCharacters('ar'),
                             ]),
@@ -256,7 +256,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                                     new Node\LiteralCharacters('c'),
                                     2,
                                     2,
-                                    false
+                                    false,
                                 ),
                                 new Node\Escaped('d'),
                             ]),
@@ -285,10 +285,10 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             0,
                             1,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('r'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -312,10 +312,10 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             0,
                             null,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('r'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -338,7 +338,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('b'),
                         new Node\Escaped('*'),
                         new Node\LiteralCharacters('r'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -362,10 +362,10 @@ final class OrParserLexerTest extends ParserLexerTestCase
                             new Node\Escaped('d'),
                             0,
                             1,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('ab'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -383,7 +383,7 @@ final class OrParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('{'),
                     0,
                     1,
-                    false
+                    false,
                 ),
             ], ''),
         ];

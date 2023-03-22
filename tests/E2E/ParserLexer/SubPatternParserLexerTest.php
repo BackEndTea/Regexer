@@ -11,7 +11,7 @@ use Generator;
 
 final class SubPatternParserLexerTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'sub pattern with or' => [
             '#(foo)|(bar)#',
@@ -31,14 +31,14 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\Or_(
                         new Node\SubPattern(
-                            [new Node\LiteralCharacters('foo')]
+                            [new Node\LiteralCharacters('foo')],
                         ),
                         new Node\SubPattern(
-                            [new Node\LiteralCharacters('bar')]
-                        )
+                            [new Node\LiteralCharacters('bar')],
+                        ),
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -72,13 +72,13 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                                     new Node\LiteralCharacters('f'),
                                     new Node\SubPattern([new Node\LiteralCharacters('oo')]),
                                 ]),
-                                new Node\SubPattern([new Node\LiteralCharacters('aa')])
+                                new Node\SubPattern([new Node\LiteralCharacters('aa')]),
                             ),
                         ]),
-                        new Node\SubPattern([new Node\LiteralCharacters('bar')])
+                        new Node\SubPattern([new Node\LiteralCharacters('bar')]),
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -130,7 +130,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),
@@ -219,7 +219,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),
@@ -249,7 +249,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),
@@ -279,7 +279,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),
@@ -309,7 +309,7 @@ final class SubPatternParserLexerTest extends ParserLexerTestCase
                 new Node\SubPattern([
                     new Node\Or_(
                         new Node\LiteralCharacters('foo'),
-                        new Node\LiteralCharacters('bar')
+                        new Node\LiteralCharacters('bar'),
                     ),
                 ], true),
                 new Node\LiteralCharacters('='),

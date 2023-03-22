@@ -12,7 +12,7 @@ final class InvalidReference extends SyntaxException
     {
         return new self(sprintf(
             'Only \',{ or < are allowed after \k, got "%s"',
-            $character
+            $character,
         ));
     }
 }

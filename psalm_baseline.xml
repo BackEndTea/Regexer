@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.3.2@57b53ff26237074fdf5cbcb034f7da5172be4524">
+<files psalm-version="5.8.0@9cf4f60a333f779ad3bc704a555920e81d4fdcda">
   <file src="src/Lexer/Lexer.php">
-    <ParadoxicalCondition occurrences="1">
-      <code>'?'</code>
-    </ParadoxicalCondition>
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;delimiter</code>
-    </MixedArgument>
-    <PossiblyNullArgument occurrences="3">
-      <code>$this-&gt;delimiter</code>
-      <code>$input-&gt;next()</code>
+    <NoValue>
+      <code>$characters</code>
+      <code>$characters</code>
+      <code>$characters</code>
+      <code><![CDATA[$this->delimiter]]></code>
+      <code><![CDATA[$this->delimiter]]></code>
+      <code><![CDATA[$this->delimiter]]></code>
+    </NoValue>
+    <PossiblyNullArgument>
+      <code><![CDATA[$input->next()]]></code>
+      <code><![CDATA[$this->delimiter]]></code>
+      <code><![CDATA[$this->delimiter]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullOperand occurrences="1">
-      <code>$input-&gt;next()</code>
+    <PossiblyNullOperand>
+      <code><![CDATA[$input->next()]]></code>
     </PossiblyNullOperand>
+    <TypeDoesNotContainType>
+      <code><![CDATA[$current === 'g']]></code>
+    </TypeDoesNotContainType>
   </file>
 </files>

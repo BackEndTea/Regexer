@@ -13,7 +13,7 @@ final class QuantifiedTest extends TestCase
     {
         $quantified = Quantified::fromString(
             new LiteralCharacters('abc'),
-            '?'
+            '?',
         );
         $this->assertSame('abc?', $quantified->asString());
         $this->assertSame(0, $quantified->getMin());
@@ -40,7 +40,7 @@ final class QuantifiedTest extends TestCase
     {
         $quantified = Quantified::fromString(
             new NoopNode(),
-            '+'
+            '+',
         );
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('cant add child to quantified node');
@@ -51,7 +51,7 @@ final class QuantifiedTest extends TestCase
     {
         $quantified = Quantified::fromString(
             new NoopNode(),
-            '+'
+            '+',
         );
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Can only quantify a single child');

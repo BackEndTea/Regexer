@@ -13,13 +13,11 @@ final class UtilTest extends TestCase
     {
         $in = [1, 2, 3];
 
-        $this->assertSame($in, Util::iterableToArray($in));
-        $this->assertSame($in, Util::iterableToArray($this->generate()));
+        $this->assertSame($in, Util::iterableToList($in));
+        $this->assertSame($in, Util::iterableToList($this->generate()));
     }
 
-    /**
-     * @return Generator<int>
-     */
+    /** @return Generator<int> */
     private function generate(): Generator
     {
         yield 1;

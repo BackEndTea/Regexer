@@ -9,12 +9,10 @@ use function substr;
 
 final class StringStream implements Stream
 {
-    private string $input;
     private int $currentIndex;
 
-    public function __construct(string $input)
+    public function __construct(private string $input)
     {
-        $this->input        = $input;
         $this->currentIndex = 0;
     }
 
@@ -28,7 +26,7 @@ final class StringStream implements Stream
         return $this->currentIndex;
     }
 
-    public function next(): ?string
+    public function next(): string|null
     {
         ++$this->currentIndex;
 
@@ -40,12 +38,12 @@ final class StringStream implements Stream
         $this->currentIndex = $index;
     }
 
-    public function at(int $index): ?string
+    public function at(int $index): string|null
     {
         return $this->input[$index] ?? null;
     }
 
-    public function indexOfNext(string $char, int $startFrom): ?int
+    public function indexOfNext(string $char, int $startFrom): int|null
     {
         $max = strlen($this->input);
         for ($i = $startFrom; $i < $max; $i++) {

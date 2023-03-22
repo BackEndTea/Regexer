@@ -11,7 +11,7 @@ use Generator;
 
 final class BracketListParserLexerTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'simple bracketlist' => [
             '/[abc]/',
@@ -25,7 +25,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\BracketList(false, [new Node\BracketList\OneOf('abc')])],
-                ''
+                '',
             ),
         ];
 
@@ -42,7 +42,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\BracketList(true, [new Node\BracketList\OneOf('abc')])],
-                ''
+                '',
             ),
         ];
 
@@ -59,7 +59,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\BracketList(true, [new Node\BracketList\OneOf('abc[')])],
-                ''
+                '',
             ),
         ];
 
@@ -76,7 +76,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\BracketList(true, [new Node\BracketList\OneOf('abc^d')])],
-                ''
+                '',
             ),
         ];
 
@@ -92,7 +92,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\BracketList(false, [new Node\BracketList\OneOf('abcd$')])],
-                ''
+                '',
             ),
         ];
 
@@ -117,7 +117,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
 
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -141,7 +141,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('z123'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -165,7 +165,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('123'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -191,7 +191,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('123'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -211,7 +211,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('-123'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -232,7 +232,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('^123'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -254,7 +254,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                         new Node\BracketList\OneOf('23'),
                     ]),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -275,14 +275,14 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\BracketList(
                         false,
-                        [new Node\BracketList\OneOf('foo')]
+                        [new Node\BracketList\OneOf('foo')],
                     ),
                     new Node\BracketList(
                         false,
-                        [new Node\BracketList\OneOf('bar')]
+                        [new Node\BracketList\OneOf('bar')],
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -304,14 +304,14 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\BracketList(
                         true,
-                        [new Node\BracketList\OneOf('foo')]
+                        [new Node\BracketList\OneOf('foo')],
                     ),
                     new Node\BracketList(
                         false,
-                        [new Node\BracketList\OneOf('bar')]
+                        [new Node\BracketList\OneOf('bar')],
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 
@@ -335,7 +335,7 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                 [
                     new Node\BracketList(
                         true,
-                        [new Node\BracketList\OneOf('foo')]
+                        [new Node\BracketList\OneOf('foo')],
                     ),
                     new Node\BracketList(
                         false,
@@ -343,10 +343,10 @@ final class BracketListParserLexerTest extends ParserLexerTestCase
                             new Node\BracketList\OneOf('1'),
                             new Node\BracketList\Range('a', 'z'),
                             new Node\BracketList\OneOf('2'),
-                        ]
+                        ],
                     ),
                 ],
-                ''
+                '',
             ),
         ];
 

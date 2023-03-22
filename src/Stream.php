@@ -6,19 +6,26 @@ namespace BackEndTea\Regexer;
 
 interface Stream
 {
+    /** @phpstan-impure */
     public function current(): string;
 
+    /** @phpstan-impure */
     public function currentIndex(): int;
 
-    public function next(): ?string;
+    /** @phpstan-impure */
+    public function next(): string|null;
 
     public function moveTo(int $index): void;
 
-    public function at(int $index): ?string;
+    /** @phpstan-impure */
+    public function at(int $index): string|null;
 
-    public function indexOfNext(string $char, int $startFrom): ?int;
+    /** @phpstan-impure */
+    public function indexOfNext(string $char, int $startFrom): int|null;
 
+    /** @phpstan-impure */
     public function getBetween(int $start, int $end): string;
 
+    /** @phpstan-impure */
     public function getUntilEnd(): string;
 }

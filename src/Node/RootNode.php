@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer\Node;
 
 use BackEndTea\Regexer\Node;
+use BackEndTea\Regexer\Token\Delimiter;
 
 use function array_map;
 use function implode;
@@ -16,20 +17,13 @@ final class RootNode extends NodeWithChildren
 {
     use WithChildren;
 
-    private string $delimiter;
-    private string $modifiers;
-
-    /**
-     * @param array<Node> $childNodes
-     */
+    /** @param array<Node> $childNodes */
     public function __construct(
-        string $delimiter,
+        private string $delimiter,
         array $childNodes,
-        string $modifiers
+        private string $modifiers,
     ) {
-        $this->delimiter = $delimiter;
-        $this->modifiers = $modifiers;
-        $this->children  = $childNodes;
+        $this->children = $childNodes;
     }
 
     public function getDelimiter(): string
@@ -59,10 +53,10 @@ final class RootNode extends NodeWithChildren
                 '',
                 array_map(
                     static fn (Node $node): string => $node->asString(),
-                    $this->children
-                )
+                    $this->children,
+                ),
             )
-            . $this->delimiter
+            . Delimiter::getClosingDelimiter($this->delimiter)
             . $this->modifiers;
     }
 }

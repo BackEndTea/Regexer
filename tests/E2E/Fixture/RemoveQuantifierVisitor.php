@@ -9,7 +9,7 @@ use BackEndTea\Regexer\NodeVisitor\BaseNodeVisitor;
 
 final class RemoveQuantifierVisitor extends BaseNodeVisitor
 {
-    public function leaveNode(Node $node): ?Node
+    public function leaveNode(Node $node): Node|null
     {
         if ($node instanceof Node\Quantified) {
             return $node->getQuantifiedNode();

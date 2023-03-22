@@ -10,19 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class DelimiterTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDelimiter
-     */
+    /** @dataProvider provideInvalidDelimiter */
     public function testCantCreateInvalidDelimiter(string $invalidDelimiter): void
     {
         $this->expectException(InvalidArgumentException::class);
         Delimiter::create($invalidDelimiter);
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidDelimiter(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideInvalidDelimiter(): Generator
     {
         yield ['\\'];
         yield ['a'];
@@ -33,9 +29,7 @@ final class DelimiterTest extends TestCase
         yield ['5'];
     }
 
-    /**
-     * @dataProvider provideValidDelimiter
-     */
+    /** @dataProvider provideValidDelimiter */
     public function testCanCreateValidDelimiter(string $delimiter): void
     {
         $this->assertMatchesRegularExpression($delimiter . 'foo' . $delimiter, 'foo', 'The delimiter was invalid or did somehow not match');
@@ -43,10 +37,8 @@ final class DelimiterTest extends TestCase
         $this->assertSame($delimiter, Delimiter::create($delimiter)->asString());
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideValidDelimiter(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideValidDelimiter(): Generator
     {
         yield ['/'];
         yield ['#'];

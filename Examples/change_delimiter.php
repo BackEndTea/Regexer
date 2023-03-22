@@ -1,5 +1,7 @@
 <?php
 
+namespace ChangeDelimiter;
+
 require_once __DIR__ .'/../vendor/autoload.php';
 
 use BackEndTea\Regexer\Lexer\Lexer;
@@ -8,12 +10,12 @@ use BackEndTea\Regexer\NodeVisitor\BaseNodeVisitor;
 use BackEndTea\Regexer\Parser\TokenParser;
 use BackEndTea\Regexer\Traverser;
 
-class SetNonCapturing extends BaseNodeVisitor
+class ChangeDelimiter extends BaseNodeVisitor
 {
     public function enterNode(Node $node): ?Node
     {
-        if ($node instanceof Node\SubPattern) {
-            $node->setCapturing(false);
+        if ($node instanceof Node\RootNode) {
+            $node->setDelimiter('(');
             return $node;
         }
 
@@ -23,7 +25,7 @@ class SetNonCapturing extends BaseNodeVisitor
 
 $ast = (new TokenParser(new Lexer()))->parse('/((foo)|(bar)){2,4}/');
 
-$newAst = (new Traverser([new SetNonCapturing()]))->traverse($ast);
+$newAst = (new Traverser([new ChangeDelimiter()]))->traverse($ast);
 
 echo $newAst->asString();
-$output = '/(?:(?:foo)|(?:bar)){2,4}/';
+$output = '(((foo)|(bar)){2,4})';

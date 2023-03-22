@@ -11,7 +11,7 @@ use Generator;
 
 final class NamedSubPatternTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'Named sub pattern' => [
             "/(?'foo'ab)/",
@@ -70,7 +70,7 @@ final class NamedSubPatternTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                     ],
                     true,
-                    new Node\SubPattern\Name('?P<', 'foo')
+                    new Node\SubPattern\Name('?P<', 'foo'),
                 ),
                 new Node\LiteralCharacters('='),
                 new Node\SubPattern\Reference('\g{', 'foo'),
@@ -96,7 +96,7 @@ final class NamedSubPatternTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                     ],
                     true,
-                    new Node\SubPattern\Name('?P<', 'foo')
+                    new Node\SubPattern\Name('?P<', 'foo'),
                 ),
                 new Node\LiteralCharacters('='),
                 new Node\SubPattern\Reference('\k{', 'foo'),
@@ -122,7 +122,7 @@ final class NamedSubPatternTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                     ],
                     true,
-                    new Node\SubPattern\Name('?P<', 'foo')
+                    new Node\SubPattern\Name('?P<', 'foo'),
                 ),
                 new Node\LiteralCharacters('='),
                 new Node\SubPattern\Reference('\k\'', 'foo'),
@@ -148,7 +148,7 @@ final class NamedSubPatternTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                     ],
                     true,
-                    new Node\SubPattern\Name('?P<', 'foo')
+                    new Node\SubPattern\Name('?P<', 'foo'),
                 ),
                 new Node\LiteralCharacters('='),
                 new Node\SubPattern\Reference('\k<', 'foo'),
@@ -174,7 +174,7 @@ final class NamedSubPatternTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('ab'),
                     ],
                     true,
-                    new Node\SubPattern\Name('?P<', 'foo')
+                    new Node\SubPattern\Name('?P<', 'foo'),
                 ),
                 new Node\LiteralCharacters('='),
                 new Node\SubPattern\Reference('(?P=', 'foo'),

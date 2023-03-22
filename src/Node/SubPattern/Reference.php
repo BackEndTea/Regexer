@@ -23,17 +23,11 @@ final class Reference extends Node
         '(?P=' => ')',
     ];
 
-    private string $referenceTo;
-    private string $prefix;
-
-    public function __construct(string $prefix, string $referenceTo)
+    public function __construct(private string $prefix, private string $referenceTo)
     {
         if (! array_key_exists($prefix, self::PREFIX_TO_END)) {
             throw new InvalidArgumentException('Prefix must be one of: ' . implode(', ', array_keys(self::PREFIX_TO_END)));
         }
-
-        $this->referenceTo = $referenceTo;
-        $this->prefix      = $prefix;
     }
 
     public function getReferenceTo(): string

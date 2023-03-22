@@ -16,18 +16,14 @@ final class QuantifierValidatorTest extends TestCase
         QuantifierValidator::getMinAndMaxFromCharacters('fo');
     }
 
-    /**
-     * @dataProvider provideQuantifierCases
-     */
-    public function testCalculatesCorrectQuantification(string $input, int $min, ?int $max): void
+    /** @dataProvider provideQuantifierCases */
+    public function testCalculatesCorrectQuantification(string $input, int $min, int|null $max): void
     {
         $this->assertSame([$min, $max], QuantifierValidator::getMinAndMaxFromCharacters($input));
     }
 
-    /**
-     * @return Generator<array{string, int, int|null}>
-     */
-    public function provideQuantifierCases(): Generator
+    /** @return Generator<array{string, int, int|null}> */
+    public static function provideQuantifierCases(): Generator
     {
         yield ['?', 0, 1];
         yield ['+', 1, null];

@@ -8,15 +8,10 @@ use BackEndTea\Regexer\Node;
 
 final class Range extends Node
 {
-    private string $from;
-    private string $to;
-
     public function __construct(
-        string $from,
-        string $to
+        private string $from,
+        private string $to,
     ) {
-        $this->from = $from;
-        $this->to   = $to;
     }
 
     public function getTo(): string

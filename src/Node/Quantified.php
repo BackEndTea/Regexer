@@ -14,17 +14,8 @@ use function sprintf;
 
 final class Quantified extends NodeWithChildren
 {
-    private Node $quantifiedNode;
-    private int $min;
-    private ?int $max;
-    private bool $lazy;
-
-    public function __construct(Node $quantifiedNode, int $min, ?int $max, bool $lazy)
+    public function __construct(private Node $quantifiedNode, private int $min, private int|null $max, private bool $lazy)
     {
-        $this->quantifiedNode = $quantifiedNode;
-        $this->min            = $min;
-        $this->max            = $max;
-        $this->lazy           = $lazy;
     }
 
     public static function fromString(Node $quantifiedNode, string $quantifierString): self
@@ -64,12 +55,12 @@ final class Quantified extends NodeWithChildren
         $this->min = $min;
     }
 
-    public function getMax(): ?int
+    public function getMax(): int|null
     {
         return $this->max;
     }
 
-    public function setMax(?int $max): void
+    public function setMax(int|null $max): void
     {
         $this->max = $max;
     }
@@ -79,7 +70,7 @@ final class Quantified extends NodeWithChildren
         return $this->quantifiedNode->asString() . $this->minAndMaxToString($this->min, $this->max) . ($this->lazy ? '?' : '');
     }
 
-    private function minAndMaxToString(int $min, ?int $max): string
+    private function minAndMaxToString(int $min, int|null $max): string
     {
         if ($min === 0) {
             if ($max === null) {
@@ -106,17 +97,13 @@ final class Quantified extends NodeWithChildren
         return sprintf('{%d,%d}', $min, $max);
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getChildren(): array
     {
         return [$this->getQuantifiedNode()];
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function setChildren(array $children): void
     {
         if (count($children) !== 1) {

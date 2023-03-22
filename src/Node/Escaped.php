@@ -8,11 +8,8 @@ use BackEndTea\Regexer\Node;
 
 final class Escaped extends Node
 {
-    private string $escapedCharacter;
-
-    public function __construct(string $escapedCharacter)
+    public function __construct(private string $escapedCharacter)
     {
-        $this->escapedCharacter = $escapedCharacter;
     }
 
     public function getEscapedCharacter(): string
