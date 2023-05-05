@@ -7,7 +7,6 @@ namespace BackEndTea\Regexer\Node;
 use BackEndTea\Regexer\Node;
 use InvalidArgumentException;
 
-use function array_values;
 use function count;
 
 final class Or_ extends NodeWithChildren
@@ -48,8 +47,6 @@ final class Or_ extends NodeWithChildren
         if (count($children) !== 2) {
             throw new InvalidArgumentException('Or can only have 2 children');
         }
-
-        $children = array_values($children);
 
         $this->left  = $children[0];
         $this->right = $children[1];

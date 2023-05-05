@@ -6,11 +6,12 @@ namespace BackEndTea\Regexer\Node\SubPattern;
 
 use Generator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class NameTest extends TestCase
 {
-    /** @dataProvider provideInvalidCharacters */
+    #[DataProvider('provideInvalidCharacters')]
     public function testCantBeCreatedFromInvalidCharacters(string $invalid): void
     {
         $this->expectException(InvalidArgumentException::class);

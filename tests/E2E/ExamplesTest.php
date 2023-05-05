@@ -6,6 +6,7 @@ namespace BackEndTea\Regexer\E2E;
 
 use Generator;
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -16,7 +17,7 @@ use function preg_match;
 /** @coversNothing */
 final class ExamplesTest extends TestCase
 {
-    /** @dataProvider provideExamples */
+    #[DataProvider('provideExamples')]
     public function testExample(SplFileInfo $file): void
     {
         $p = new Process(

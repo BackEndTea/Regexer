@@ -6,11 +6,12 @@ namespace BackEndTea\Regexer\Token;
 
 use BackEndTea\Regexer\Token\Exception\InvalidModifiers;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class ModifierTest extends TestCase
 {
-    /** @dataProvider provideInvalidModifierCases */
+    #[DataProvider('provideInvalidModifierCases')]
     public function testDoesNotAllowInvalidModifiers(string $invalidModifiers): void
     {
         $this->expectException(InvalidModifiers::class);
@@ -24,9 +25,10 @@ final class ModifierTest extends TestCase
         yield ['i_'];
         yield['iu2'];
         yield ['I'];
+        yield [''];
     }
 
-    /** @dataProvider provideValidModifiers */
+    #[DataProvider('provideValidModifiers')]
     public function testAllowsValidModifiers(string $modifiers): void
     {
         $modifier = Modifier::fromModifiers($modifiers);
@@ -37,7 +39,6 @@ final class ModifierTest extends TestCase
     /** @return Generator<array{string}> */
     public static function provideValidModifiers(): Generator
     {
-        yield [''];
         yield ['i'];
         yield['u'];
         yield ['iu'];

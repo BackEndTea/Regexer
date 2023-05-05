@@ -40,6 +40,10 @@ final class Lexer
     /** @return iterable<Token> */
     public function regexToTokenStream(Stream $input): iterable
     {
+        if ($input->length() === 0) {
+            throw Token\Exception\EmptyRegex::create();
+        }
+
         // reset to orignial state
         $this->delimiter       = null;
         $this->subPatternCount = 0;
@@ -366,7 +370,7 @@ final class Lexer
                 throw Token\Exception\InvalidSubPattern::forInvalidCaptureGroupName();
             }
 
-            if (! ctype_alnum($char)) {
+            if (! ctype_alnum($char) && $char !== '_') {
                 throw Token\Exception\InvalidSubPattern::forInvalidCaptureGroupName();
             }
 

@@ -16,7 +16,7 @@ final class UnableToParseRegex extends LogicException implements RegexerExceptio
     {
         return new self(
             sprintf(
-                'Error while parsing regex, currenlty parsed: "%s"',
+                'Error while parsing regex, currently parsed: "%s"',
                 $currentlyParsed,
             ),
             previous: $previous,

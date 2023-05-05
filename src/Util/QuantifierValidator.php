@@ -31,21 +31,20 @@ final class QuantifierValidator
 
             case '*':
                 return [0, null];
-
-            default:
-                $pattern = trim($quantifier, '{}');
-                $items   = explode(',', $pattern);
-
-                if (count($items) === 1) {
-                    return [(int) $items[0], (int) $items[0]];
-                }
-
-                if ($items[1] === '') {
-                    return [(int) $items[0], null];
-                }
-
-                return [(int) $items[0], (int) $items[1]];
         }
+
+        $pattern = trim($quantifier, '{}');
+        $items   = explode(',', $pattern);
+
+        if (count($items) === 1) {
+            return [(int) $items[0], (int) $items[0]];
+        }
+
+        if ($items[1] === '') {
+            return [(int) $items[0], null];
+        }
+
+        return [(int) $items[0], (int) $items[1]];
     }
 
     public static function isValidQuantifier(string $quantifier): bool

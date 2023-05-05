@@ -6,11 +6,12 @@ namespace BackEndTea\Regexer\Token;
 
 use Generator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class DelimiterTest extends TestCase
 {
-    /** @dataProvider provideInvalidDelimiter */
+    #[DataProvider('provideInvalidDelimiter')]
     public function testCantCreateInvalidDelimiter(string $invalidDelimiter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -29,7 +30,7 @@ final class DelimiterTest extends TestCase
         yield ['5'];
     }
 
-    /** @dataProvider provideValidDelimiter */
+    #[DataProvider('provideValidDelimiter')]
     public function testCanCreateValidDelimiter(string $delimiter): void
     {
         $this->assertMatchesRegularExpression($delimiter . 'foo' . $delimiter, 'foo', 'The delimiter was invalid or did somehow not match');

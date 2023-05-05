@@ -17,7 +17,7 @@ final class RootNode extends NodeWithChildren
 {
     use WithChildren;
 
-    /** @param array<Node> $childNodes */
+    /** @param list<Node> $childNodes */
     public function __construct(
         private string $delimiter,
         array $childNodes,

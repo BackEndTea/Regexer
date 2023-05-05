@@ -6,11 +6,12 @@ namespace BackEndTea\Regexer\Token\Escaped;
 
 use Generator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class EscapedCharacterTest extends TestCase
 {
-    /** @dataProvider provideInvalidEscapedCharacters */
+    #[DataProvider('provideInvalidEscapedCharacters')]
     public function testCanOnlyBeOneCharacter(string $invalidCharacter): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -13,7 +13,7 @@ final class NodeGroup extends NodeWithChildren
 {
     use WithChildren;
 
-    /** @param array<Node> $children */
+    /** @param list<Node> $children */
     public function __construct(array $children)
     {
         $this->children = $children;

@@ -20,7 +20,7 @@ final class Modifier extends Token
 
     private static function assertValidModifier(string $modifiers): void
     {
-        if (preg_match('/[^imsxADSUXJu]/', $modifiers) === 1) {
+        if ($modifiers === '' || preg_match('/[^imsxADSUXJu]/', $modifiers) === 1) {
             throw InvalidModifiers::fromModifiers($modifiers);
         }
     }
