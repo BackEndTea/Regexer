@@ -15,9 +15,7 @@ use function trim;
 
 final class QuantifierValidator
 {
-    /**
-     * @return array{int, int|null}
-     */
+    /** @return array{int, int|null} */
     public static function getMinAndMaxFromCharacters(string $quantifier): array
     {
         if (! self::isValidQuantifier($quantifier)) {

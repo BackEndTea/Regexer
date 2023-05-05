@@ -19,7 +19,7 @@ final class Reference extends Token
     {
         return new self(sprintf(
             '(%s',
-            $name
+            $name,
         ));
     }
 }

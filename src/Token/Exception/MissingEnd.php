@@ -14,7 +14,7 @@ final class MissingEnd extends SyntaxException
             sprintf(
                 'Opening %s does not have an ending',
                 $char,
-            )
+            ),
         );
     }
 
@@ -24,7 +24,7 @@ final class MissingEnd extends SyntaxException
             sprintf(
                 'Delimiter %s does not have an ending',
                 $char,
-            )
+            ),
         );
     }
 }

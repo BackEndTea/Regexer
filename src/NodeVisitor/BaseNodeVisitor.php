@@ -14,12 +14,12 @@ class BaseNodeVisitor implements NodeVisitor
         //noop
     }
 
-    public function enterNode(Node $node): ?Node
+    public function enterNode(Node $node): Node|null
     {
         return null;
     }
 
-    public function leaveNode(Node $node): ?Node
+    public function leaveNode(Node $node): Node|null
     {
         return null;
     }

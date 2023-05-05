@@ -12,7 +12,7 @@ final class InvalidModifiers extends SyntaxException
     {
         return new self(sprintf(
             'One of the modifiers is not allowed" %s"',
-            $modifiers
+            $modifiers,
         ));
     }
 }

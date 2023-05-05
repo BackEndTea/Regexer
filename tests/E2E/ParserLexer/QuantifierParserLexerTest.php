@@ -11,7 +11,7 @@ use Generator;
 
 final class QuantifierParserLexerTest extends ParserLexerTestCase
 {
-    public function provideTestCases(): Generator
+    public static function provideTestCases(): Generator
     {
         yield 'Quantifier with begin and end' => [
             '/a{3,5}/',
@@ -26,7 +26,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('a'),
                     3,
                     5,
-                    false
+                    false,
                 ),
             ], ''),
         ];
@@ -66,7 +66,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
             new Node\RootNode(
                 '/',
                 [new Node\LiteralCharacters('abc{4')],
-                ''
+                '',
             ),
         ];
 
@@ -105,7 +105,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters(','),
                         new Node\Quantified(new Node\Escaped('d'), 0, null, false),
                         new Node\LiteralCharacters('}'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -125,7 +125,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('b'),
                     2,
                     2,
-                    false
+                    false,
                 ),
                 new Node\LiteralCharacters('cd'),
             ], ''),
@@ -153,10 +153,10 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             2,
                             2,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('cd'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -181,10 +181,10 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             2,
                             2,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('cd'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -208,10 +208,10 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('a'),
                             2,
                             2,
-                            false
+                            false,
                         ),
                         new Node\LiteralCharacters('bcd'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -231,7 +231,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('o'),
                     0,
                     1,
-                    true
+                    true,
                 ),
             ], ''),
         ];
@@ -256,10 +256,10 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                             new Node\Escaped('d'),
                             2,
                             2,
-                            true
+                            true,
                         ),
                         new Node\Escaped('D'),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -284,9 +284,9 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                             new Node\LiteralCharacters('b'),
                             0,
                             null,
-                            true
+                            true,
                         ),
-                    ])
+                    ]),
                 ),
             ], ''),
         ];
@@ -309,8 +309,8 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                         new Node\LiteralCharacters('a'),
                         0,
                         null,
-                        true
-                    )
+                        true,
+                    ),
                 ),
             ], ''),
         ];
@@ -329,7 +329,7 @@ final class QuantifierParserLexerTest extends ParserLexerTestCase
                     new Node\LiteralCharacters('a'),
                     1,
                     null,
-                    true
+                    true,
                 ),
             ], ''),
         ];

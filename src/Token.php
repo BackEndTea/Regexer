@@ -6,11 +6,8 @@ namespace BackEndTea\Regexer;
 
 abstract class Token
 {
-    private string $content;
-
-    protected function __construct(string $content)
+    protected function __construct(private string $content)
     {
-        $this->content = $content;
     }
 
     public function asString(): string

@@ -16,20 +16,15 @@ use function substr;
 
 final class Name extends Node
 {
-    private string $start;
-    private string $name;
-
     private const CAPTURE_GROUP_TO_END = [
         "?'" => "'",
         '?<' => '>',
         '?P<' => '>',
     ];
 
-    public function __construct(string $start, string $name)
+    public function __construct(private string $start, private string $name)
     {
         $this->validateStart($start);
-        $this->start = $start;
-        $this->name  = $name;
     }
 
     public static function fromCharacters(string $characters): self
@@ -50,8 +45,8 @@ final class Name extends Node
                 'Named capture group must start with one of' .
                 implode(
                     ', ',
-                    array_keys(self::CAPTURE_GROUP_TO_END)
-                )
+                    array_keys(self::CAPTURE_GROUP_TO_END),
+                ),
             );
         }
     }

@@ -8,15 +8,9 @@ use BackEndTea\Regexer\Node\NodeWithChildren;
 
 final class Traverser
 {
-    /** @var NodeVisitor[] */
-    private array $visitors;
-
-    /**
-     * @param NodeVisitor[] $visitors
-     */
-    public function __construct(array $visitors)
+    /** @param NodeVisitor[] $visitors */
+    public function __construct(private array $visitors)
     {
-        $this->visitors = $visitors;
     }
 
     public function addVisitor(NodeVisitor $visitor): void

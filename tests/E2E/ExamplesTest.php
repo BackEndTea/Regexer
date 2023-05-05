@@ -13,21 +13,17 @@ use Symfony\Component\Process\Process;
 
 use function preg_match;
 
-/**
- * @coversNothing
- */
+/** @coversNothing */
 final class ExamplesTest extends TestCase
 {
-    /**
-     * @dataProvider provideExamples
-     */
+    /** @dataProvider provideExamples */
     public function testExample(SplFileInfo $file): void
     {
         $p = new Process(
             [
                 'php',
                 $file->getRealPath(),
-            ]
+            ],
         );
 
         $p->mustRun();
@@ -41,10 +37,8 @@ final class ExamplesTest extends TestCase
         $this->assertSame($matches[1], $p->getOutput());
     }
 
-    /**
-     * @return Generator<array{SplFileInfo}>
-     */
-    public function provideExamples(): Generator
+    /** @return Generator<array{SplFileInfo}> */
+    public static function provideExamples(): Generator
     {
         /** @var Iterator<SplFileInfo> $files */
         $files = Finder::create()

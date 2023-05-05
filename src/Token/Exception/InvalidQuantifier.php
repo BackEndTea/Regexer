@@ -12,7 +12,7 @@ final class InvalidQuantifier extends SyntaxException
     {
         return new self(sprintf(
             'Unable to create quantifier tokens from following sequence: %s',
-            $characters
+            $characters,
         ));
     }
 }

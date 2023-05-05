@@ -8,11 +8,8 @@ use BackEndTea\Regexer\Node;
 
 final class LiteralCharacters extends Node
 {
-    private string $characters;
-
-    public function __construct(string $characters)
+    public function __construct(private string $characters)
     {
-        $this->characters = $characters;
     }
 
     public function getCharacters(): string

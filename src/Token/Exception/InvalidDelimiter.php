@@ -12,7 +12,7 @@ final class InvalidDelimiter extends SyntaxException
     {
         return new self(sprintf(
             '"%s" is not a valid delimiter',
-            $delimiter
+            $delimiter,
         ));
     }
 
@@ -20,7 +20,7 @@ final class InvalidDelimiter extends SyntaxException
     {
         return new self(sprintf(
             'Unescaped delimiter inside of a bracketlist, at postion %d is not allowed',
-            $position
+            $position,
         ));
     }
 }

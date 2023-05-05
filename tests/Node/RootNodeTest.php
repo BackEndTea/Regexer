@@ -14,7 +14,7 @@ final class RootNodeTest extends TestCase
         $root = new RootNode(
             '/',
             [new LiteralCharacters('foo')],
-            'i'
+            'i',
         );
 
         $this->assertSame('/', $root->getDelimiter());

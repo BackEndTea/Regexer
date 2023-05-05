@@ -6,26 +6,25 @@ namespace BackEndTea\Regexer\Util;
 
 use Traversable;
 
+use function array_values;
 use function iterator_to_array;
 
-/**
- * @internal
- */
+/** @internal */
 final class Util
 {
     /**
-     * @param iterable<mixed> $it
+     * @param iterable<T> $it
      *
-     * @return array<mixed> $it
+     * @return list<T>
      *
-     * @psalm-template  T
-     * @psalm-param iterable<T> $it
-     * @psalm-return array<T>
+     * @template  T
      */
-    public static function iterableToArray(iterable $it): array
+    public static function iterableToList(iterable $it): array
     {
-        return $it instanceof Traversable
-            ? iterator_to_array($it)
-            : $it;
+        return array_values(
+            $it instanceof Traversable
+                ? iterator_to_array($it)
+                : $it,
+        );
     }
 }

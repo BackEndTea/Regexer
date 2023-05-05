@@ -21,28 +21,28 @@ use function substr;
 
 final class TokenParser implements Parser
 {
-    private Lexer $lexer;
-
-    public function __construct(Lexer $lexer)
+    public function __construct(private Lexer $lexer)
     {
-        $this->lexer = $lexer;
     }
 
     public function parse(string $regex): Node
     {
         return $this->convert(
-            Util::iterableToArray($this->lexer->regexToTokenStream(
-                new StringStream($regex)
-            ))
+            Util::iterableToList($this->lexer->regexToTokenStream(
+                new StringStream($regex),
+            )),
         );
     }
 
     /**
+     * @internal
+     * This method is not part of the API, but used inside of tests.
+     *
      * This method naively assumes the array of tokens is a valid regex.
      *
-     * @param array<Token> $tokens
+     * @param list<Token> $tokens
      */
-    private function convert(array $tokens): Node
+    public function convert(array $tokens): Node
     {
         $delimiterToken = $tokens[0];
 
@@ -123,9 +123,7 @@ final class TokenParser implements Parser
         return [$i, new Node\BracketList($negated, $parts)];
     }
 
-    /**
-     * @return array{string, string}
-     */
+    /** @return array{string, string} */
     private function getFromToOfRange(Token\BracketList\Range $range): array
     {
         $parts = str_split($range->asString());

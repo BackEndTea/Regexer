@@ -11,17 +11,13 @@ trait WithChildren
     /** @var array<Node> */
     protected array $children = [];
 
-    /**
-     * @return Node[]
-     */
+    /** @return Node[] */
     public function getChildren(): array
     {
         return $this->children;
     }
 
-    /**
-     * @param Node[] $children
-     */
+    /** @param Node[] $children */
     public function setChildren(array $children): void
     {
         $this->children = $children;

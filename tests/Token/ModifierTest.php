@@ -10,19 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class ModifierTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidModifierCases
-     */
+    /** @dataProvider provideInvalidModifierCases */
     public function testDoesNotAllowInvalidModifiers(string $invalidModifiers): void
     {
         $this->expectException(InvalidModifiers::class);
         Modifier::fromModifiers($invalidModifiers);
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidModifierCases(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideInvalidModifierCases(): Generator
     {
         yield ['1234567'];
         yield ['i_'];
@@ -30,9 +26,7 @@ final class ModifierTest extends TestCase
         yield ['I'];
     }
 
-    /**
-     * @dataProvider provideValidModifiers
-     */
+    /** @dataProvider provideValidModifiers */
     public function testAllowsValidModifiers(string $modifiers): void
     {
         $modifier = Modifier::fromModifiers($modifiers);
@@ -40,10 +34,8 @@ final class ModifierTest extends TestCase
         $this->assertSame($modifiers, $modifier->asString());
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideValidModifiers(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideValidModifiers(): Generator
     {
         yield [''];
         yield ['i'];

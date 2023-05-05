@@ -14,7 +14,7 @@ final class MissingStart extends SyntaxException
             sprintf(
                 'Ending %s does not have a start',
                 $char,
-            )
+            ),
         );
     }
 }

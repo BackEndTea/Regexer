@@ -10,19 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 final class EscapedCharacterTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidEscapedCharacters
-     */
+    /** @dataProvider provideInvalidEscapedCharacters */
     public function testCanOnlyBeOneCharacter(string $invalidCharacter): void
     {
         $this->expectException(InvalidArgumentException::class);
         EscapedCharacter::fromCharacter($invalidCharacter);
     }
 
-    /**
-     * @return Generator<array{string}>
-     */
-    public function provideInvalidEscapedCharacters(): Generator
+    /** @return Generator<array{string}> */
+    public static function provideInvalidEscapedCharacters(): Generator
     {
         yield [''];
         yield ['ab'];

@@ -13,9 +13,7 @@ final class NodeGroup extends NodeWithChildren
 {
     use WithChildren;
 
-    /**
-     * @param array<Node> $children
-     */
+    /** @param array<Node> $children */
     public function __construct(array $children)
     {
         $this->children = $children;
@@ -27,8 +25,8 @@ final class NodeGroup extends NodeWithChildren
             '',
             array_map(
                 static fn (Node $node): string => $node->asString(),
-                $this->children
-            )
+                $this->children,
+            ),
         );
     }
 }
