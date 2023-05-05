@@ -12,6 +12,7 @@ use BackEndTea\Regexer\Token;
 use BackEndTea\Regexer\Util\Util;
 use LogicException;
 
+use function array_key_exists;
 use function array_pop;
 use function assert;
 use function count;
@@ -64,9 +65,10 @@ final class TokenParser implements Parser
                 continue;
             }
 
-            $children = $root->getChildren();
-            if (isset($children[count($children) - 1])) {
-                $child = $children[count($children) - 1];
+            $children   = $root->getChildren();
+            $childIndex = count($children) - 1;
+            if (array_key_exists($childIndex, $children)) {
+                $child = $children[$childIndex];
                 if ($child instanceof Node\Or_) {
                     [$i] = $this->parseFromToken($child, $tokens, $i);
                     continue;
@@ -171,9 +173,10 @@ final class TokenParser implements Parser
                 continue;
             }
 
-            $children = $pattern->getChildren();
-            if (isset($children[count($children) - 1])) {
-                $child = $children[count($children) - 1];
+            $children   = $pattern->getChildren();
+            $childIndex = count($children) - 1;
+            if (array_key_exists($childIndex, $children)) {
+                $child = $children[$childIndex];
                 if ($child instanceof Node\Or_) {
                     [$i] = $this->parseFromToken($child, $tokens, $i);
                     continue;

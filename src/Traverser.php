@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer;
 
 use BackEndTea\Regexer\Node\NodeWithChildren;
+use BackEndTea\Regexer\Node\NoopNode;
+
+use function array_filter;
+use function array_values;
 
 final class Traverser
 {
-    /** @param NodeVisitor[] $visitors */
+    /** @param list<NodeVisitor> $visitors */
     public function __construct(private array $visitors)
     {
     }
@@ -48,9 +52,9 @@ final class Traverser
     }
 
     /**
-     * @param array<Node> $children
+     * @param list<Node> $children
      *
-     * @return array<Node>
+     * @return list<Node>
      */
     private function visitChildren(array $children): array
     {
@@ -74,6 +78,6 @@ final class Traverser
             }
         }
 
-        return $children;
+        return array_values(array_filter($children, static fn (Node $node) => ! $node instanceof NoopNode));
     }
 }

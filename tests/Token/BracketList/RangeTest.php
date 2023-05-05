@@ -6,11 +6,12 @@ namespace BackEndTea\Regexer\Token\BracketList;
 
 use Generator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class RangeTest extends TestCase
 {
-    /** @dataProvider provideInvalidRangeCases */
+    #[DataProvider('provideInvalidRangeCases')]
     public function testCanNotBeCreatedFromInvalidCharacters(string $invalidRange): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -27,7 +28,7 @@ final class RangeTest extends TestCase
         yield ['\b-22'];
     }
 
-    /** @dataProvider provideValidRangeCases */
+    #[DataProvider('provideValidRangeCases')]
     public function canBeRangeWithDash(string $inputRange): void
     {
         $this->assertSame($inputRange, Range::fromCharacters($inputRange)->asString());

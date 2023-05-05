@@ -6,6 +6,7 @@ namespace BackEndTea\Regexer\Util;
 
 use BackEndTea\Regexer\Token\Exception\InvalidQuantifier;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class QuantifierValidatorTest extends TestCase
@@ -16,7 +17,7 @@ final class QuantifierValidatorTest extends TestCase
         QuantifierValidator::getMinAndMaxFromCharacters('fo');
     }
 
-    /** @dataProvider provideQuantifierCases */
+    #[DataProvider('provideQuantifierCases')]
     public function testCalculatesCorrectQuantification(string $input, int $min, int|null $max): void
     {
         $this->assertSame([$min, $max], QuantifierValidator::getMinAndMaxFromCharacters($input));

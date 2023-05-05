@@ -12,6 +12,7 @@ use BackEndTea\Regexer\StringStream;
 use BackEndTea\Regexer\Token;
 use BackEndTea\Regexer\Util\Util;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -27,9 +28,8 @@ abstract class ParserLexerTestCase extends TestCase
      * @param array<Token>  $expectedTokens
      * @param array<string> $matches        Strings that match the input regex
      * @param array<string> $notMatches     Strings that do not match the input regex
-     *
-     * @dataProvider provideTestCases
      */
+    #[DataProvider('provideTestCases')]
     public function testCanParseAndLexInput(
         string $input,
         array $expectedTokens,

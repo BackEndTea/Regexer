@@ -55,8 +55,8 @@ final class Or_Test extends TestCase
         );
 
         $or->setChildren([
-            'one' => new LiteralCharacters('abc'),
-            'two' => new LiteralCharacters('def'),
+            new LiteralCharacters('abc'),
+            new LiteralCharacters('def'),
         ]);
 
         $this->assertSame('abc|def', $or->asString());

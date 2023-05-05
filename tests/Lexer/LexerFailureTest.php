@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BackEndTea\Regexer\Lexer;
 
 use BackEndTea\Regexer\StringStream;
+use BackEndTea\Regexer\Token\Exception\EmptyRegex;
 use BackEndTea\Regexer\Token\Exception\InvalidDelimiter;
 use BackEndTea\Regexer\Token\Exception\InvalidReference;
 use BackEndTea\Regexer\Token\Exception\InvalidSubPattern;
@@ -13,6 +14,7 @@ use BackEndTea\Regexer\Token\Exception\MissingStart;
 use BackEndTea\Regexer\Token\Exception\UnclosedBracketList;
 use BackEndTea\Regexer\Util\Util;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -21,11 +23,8 @@ use function sprintf;
 
 final class LexerFailureTest extends TestCase
 {
-    /**
-     * @param class-string<Throwable> $expectedException
-     *
-     * @dataProvider provideInvalidRegexes
-     */
+    /** @param class-string<Throwable> $expectedException */
+    #[DataProvider('provideInvalidRegexes')]
     public function testItFailsOnParsing(string $input, string $expectedException): void
     {
         self::assertFalse(@preg_match($input, 'foo'), sprintf(
@@ -86,11 +85,6 @@ final class LexerFailureTest extends TestCase
         yield ['/(?asdf)', InvalidSubPattern::class];
         yield ['/(?P\'ad\'bb)', InvalidSubPattern::class];
 
-        /**
-         * TODO: This is a valid regex, support it
-         */
-
-//        yield ['/(?<_ab>dd)/', InvalidSubPattern::class];
         yield ['/(?<3ab>dd)/', InvalidSubPattern::class];
         yield ['/(?F<ab>dd)/', InvalidSubPattern::class];
 
@@ -107,6 +101,11 @@ final class LexerFailureTest extends TestCase
         yield 'cant end on unescaped K' => [
             '/\k',
             MissingEnd::class,
+        ];
+
+        yield 'empty string' => [
+            '',
+            EmptyRegex::class,
         ];
     }
 }

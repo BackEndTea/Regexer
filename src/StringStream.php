@@ -64,4 +64,9 @@ final class StringStream implements Stream
     {
         return substr($this->input, $this->currentIndex);
     }
+
+    public function length(): int
+    {
+        return strlen($this->input);
+    }
 }

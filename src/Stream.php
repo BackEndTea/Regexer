@@ -28,4 +28,6 @@ interface Stream
 
     /** @phpstan-impure */
     public function getUntilEnd(): string;
+
+    public function length(): int;
 }

@@ -15,7 +15,7 @@ final class BracketList extends NodeWithChildren
 
     private bool $negated;
 
-    /** @param array<Node> $children */
+    /** @param list<Node> $children */
     public function __construct(
         bool $isNegated,
         array $children,

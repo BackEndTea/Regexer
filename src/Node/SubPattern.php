@@ -13,16 +13,13 @@ final class SubPattern extends NodeWithChildren
 {
     use WithChildren;
 
-    private SubPattern\Name|null $name;
-
-    /** @param array<Node> $children */
+    /** @param list<Node> $children */
     public function __construct(
         array $children,
         private bool $isCapturing = true,
-        Node\SubPattern\Name|null $name = null,
+        private Node\SubPattern\Name|null $name = null,
     ) {
         $this->children = $children;
-        $this->name     = $name;
     }
 
     public function isCapturing(): bool

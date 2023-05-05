@@ -8,16 +8,16 @@ use BackEndTea\Regexer\Node;
 
 trait WithChildren
 {
-    /** @var array<Node> */
-    protected array $children = [];
+    /** @var list<Node> */
+    private array $children = [];
 
-    /** @return Node[] */
+    /** @return list<Node> */
     public function getChildren(): array
     {
         return $this->children;
     }
 
-    /** @param Node[] $children */
+    /** @param list<Node> $children */
     public function setChildren(array $children): void
     {
         $this->children = $children;

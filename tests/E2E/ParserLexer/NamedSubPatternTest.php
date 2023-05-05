@@ -39,6 +39,29 @@ final class NamedSubPatternTest extends ParserLexerTestCase
             new Node\RootNode('/', [new Node\SubPattern([new Node\LiteralCharacters('ab')], true, new Node\SubPattern\Name('?<', 'foo'))], ''),
         ];
 
+        yield 'Sub pattern with _ notation' => [
+            '/(?<_ab>dd)/',
+            [
+                Token\Delimiter::create('/'),
+                Token\SubPattern\Start::create(),
+                Token\SubPattern\Named::fromName('?<_ab>'),
+                Token\LiteralCharacters::create('dd'),
+                Token\SubPattern\End::create(),
+                Token\Delimiter::create('/'),
+            ],
+            new Node\RootNode(
+                '/',
+                [
+                    new Node\SubPattern(
+                        [new Node\LiteralCharacters('dd')],
+                        true,
+                        new Node\SubPattern\Name('?<', '_ab'),
+                    ),
+                ],
+                '',
+            ),
+        ];
+
         yield 'Named sub pattern with P notation' => [
             '/(?P<foo>ab)/',
             [
